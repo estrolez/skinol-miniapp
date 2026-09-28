@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SKINOL - CS2 Cases</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { background-color: #0d0f17; color: #fff; font-family: sans-serif; user-select: none; }
+    .roulette-container { position: relative; overflow: hidden; }
+    .roulette-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #a855f7; z-index: 10; transform: translateX(-50%); }
+    .roulette-track { display: flex; transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body class="pb-20">
+
+  <!-- TOP BAR / HEADER -->
+  <header class="flex items-center justify-between p-4 bg-gray-900 border-b border-gray-800">
+    <div class="flex items-center gap-3">
+      <div id="user-avatar" class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-lg font-bold">S</div>
+      <div>
+        <h2 id="user-name" class="font-bold text-sm">Игрок</h2>
+        <span class="text-xs text-purple-400">Уровень 1</span>
+      </div>
+    </div>
+    <div class="bg-gray-800 px-3 py-1.5 rounded-full border border-purple-500/30 flex items-center gap-1.5">
+      <span class="text-yellow-400 font-bold" id="balance">100</span>
+      <span class="text-xs text-gray-400">🟡</span>
+    </div>
+  </header>
+
+  <main class="p-4">
+    <!-- TAB 1: CASES -->
+    <div id="tab-cases" class="tab-content active space-y-4">
+      
+      <!-- ROULETTE AREA -->
+      <div class="bg-gray-900 rounded-2xl p-4 border border-gray-800 text-center">
+        <h3 id="case-title" class="text-lg font-bold mb-3 text-purple-400">Бесплатный кейс</h3>
+        
+        <div class="roulette-container bg-gray-950 h-24 rounded-xl border border-gray-800 mb-4">
+          <div class="roulette-line"></div>
+          <div id="roulette-track" class="roulette-track h-full items-center">
+            <!-- Items generated via JS -->
+          </div>
+        </div>
+
+        <button id="open-btn" onclick="spinCase()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 font-bold rounded-xl active:scale-95 transition">
+          Открыть кейс
+        </button>
+      </div>
+
+      <!-- CASE LIST -->
+      <h3 class="font-bold text-gray-400 mt-6">Выбор кейса</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div onclick="selectCase('Free', 0)" class="bg-gray-900 p-3 rounded-xl border border-purple-500/50 text-center cursor-pointer">
+          <div class="text-3xl mb-1">📦</div>
+          <div class="font-bold text-sm">Free Case</div>
+          <div class="text-xs text-green-400">БЕСПЛАТНО</div>
+        </div>
+        <div onclick="selectCase('Operation', 50)" class="bg-gray-900 p-3 rounded-xl border border-gray-800 text-center cursor-pointer">
+          <div class="text-3xl mb-1">🎁</div>
+          <div class="font-bold text-sm">SKINOL Case</div>
+          <div class="text-xs text-yellow-400">50 🟡</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: INVENTORY -->
+    <div id="tab-inventory" class="tab-content">
+      <h3 class="font-bold text-lg mb-3">Мой инвентарь</h3>
+      <div id="inventory-list" class="grid grid-cols-2 gap-3">
+        <p class="text-gray-500 text-sm col-span-2 text-center py-8">Инвентарь пуст. Откройте кейс!</p>
+      </div>
+    </div>
+
+    <!-- TAB 3: TASKS -->
+    <div id="tab-tasks" class="tab-content space-y-3">
+      <h3 class="font-bold text-lg mb-3">Задания</h3>
+      <div class="bg-gray-900 p-3 rounded-xl flex justify-between items-center border border-gray-800">
+        <div>
+          <div class="font-bold text-sm">Подписка на ТГ канал</div>
+          <div class="text-xs text-yellow-400">+50 🟡</div>
+        </div>
+        <button class="bg-purple-600 px-3 py-1.5 rounded-lg text-xs font-bold">Выполнить</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: FRIENDS -->
+    <div id="tab-friends" class="tab-content text-center py-6">
+      <h3 class="font-bold text-lg mb-2">Пригласи друзей</h3>
+      <p class="text-xs text-gray-400 mb-4">Получай +20 🟡 за каждого приглашенного друга!</p>
+      <button onclick="shareRef()" class="bg-indigo-600 px-6 py-3 rounded-xl font-bold text-sm">Пригласить друга</button>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAVIGATION (4 TABS LIKE SKINOZ) -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 flex justify-around py-2">
+    <button onclick="switchTab('cases')" class="flex flex-col items-center text-purple-400">
+      <span class="text-xl">📦</span>
+      <span class="text-[10px]">Кейсы</span>
+    </button>
+    <button onclick="switchTab('inventory')" class="flex flex-col items-center text-gray-400">
+      <span class="text-xl">🎒</span>
+      <span class="text-[10px]">Инвентарь</span>
+    </button>
+    <button onclick="switchTab('tasks')" class="flex flex-col items-center text-gray-400">
+      <span class="text-xl">⚡</span>
+      <span class="text-[10px]">Задания</span>
+    </button>
+    <button onclick="switchTab('friends')" class="flex flex-col items-center text-gray-400">
+      <span class="text-xl">👥</span>
+      <span class="text-[10px]">Друзья</span>
+    </button>
+  </nav>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // User init
+    if (tg.initDataUnsafe?.user) {
+      document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
+      if (tg.initDataUnsafe.user.photo_url) {
+        document.getElementById('user-avatar').innerHTML = `<img src="${tg.initDataUnsafe.user.photo_url}" class="w-full h-full rounded-full">`;
+      }
+    }
+
+    let coins = 100;
+    let inventory = [];
+    let currentCost = 0;
+
+    const skins = [
+      { name: 'AK-47 | Redline', rarity: 'red', val: 80, icon: '🔫' },
+      { name: 'M4A4 | Howl', rarity: 'yellow', val: 250, icon: '🔥' },
+      { name: 'AWP | Asiimov', rarity: 'red', val: 120, icon: '🎯' },
+      { name: 'USP-S | Cyrex', rarity: 'purple', val: 30, icon: '🔫' },
+      { name: 'Glock-18 | Water', rarity: 'blue', val: 10, icon: '🔫' }
+    ];
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+
+    function selectCase(name, cost) {
+      currentCost = cost;
+      document.getElementById('case-title').innerText = name + ' Case';
+    }
+
+    function spinCase() {
+      if (coins < currentCost) {
+        alert('Недостаточно монет!');
+        return;
+      }
+      coins -= currentCost;
+      document.getElementById('balance').innerText = coins;
+
+      const track = document.getElementById('roulette-track');
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0px)';
+      track.innerHTML = '';
+
+      for (let i = 0; i < 20; i++) {
+        const item = skins[Math.floor(Math.random() * skins.length)];
+        const div = document.createElement('div');
+        div.className = 'flex-shrink-0 w-20 h-20 bg-gray-900 mx-1 rounded-lg border border-gray-700 flex flex-col items-center justify-center text-xs';
+        div.innerHTML = `<span class="text-2xl">${item.icon}</span><span class="truncate w-16 text-center mt-1">${item.name}</span>`;
+        track.appendChild(div);
+      }
+
+      setTimeout(() => {
+        track.style.transition = 'transform 3s cubic-bezier(0.15, 0.9, 0.15, 1)';
+        const winIndex = 15;
+        const wonSkin = skins[Math.floor(Math.random() * skins.length)];
+        track.children[winIndex].innerHTML = `<span class="text-2xl">${wonSkin.icon}</span><span class="truncate w-16 text-center font-bold text-purple-400 mt-1">${wonSkin.name}</span>`;
+        
+        track.style.transform = `translateX(-${winIndex * 88 - 100}px)`;
+
+        setTimeout(() => {
+          inventory.push(wonSkin);
+          updateInventory();
+          alert(`Вы выиграли: ${wonSkin.name}!`);
+        }, 3200);
+      }, 50);
+    }
+
+    function updateInventory() {
+      const list = document.getElementById('inventory-list');
+      if (inventory.length === 0) return;
+      list.innerHTML = '';
+      inventory.forEach((item, idx) => {
+        list.innerHTML += `
+          <div class="bg-gray-900 p-3 rounded-xl border border-gray-800 text-center">
+            <div class="text-3xl mb-1">${item.icon}</div>
+            <div class="font-bold text-xs truncate">${item.name}</div>
+            <div class="text-xs text-yellow-400 mt-1">${item.val} 🟡</div>
+          </div>
+        `;
+      });
+    }
+
+    function shareRef() {
+      tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/Skinolbot/app&text=Забирай бесплатные скины CS2 в SKINOL!`);
+    }
+  </script>
+</body>
+</html>
 
