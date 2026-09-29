@@ -1,211 +1,247 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>SKINOL - CS2 Cases</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body { background-color: #0d0f17; color: #fff; font-family: sans-serif; user-select: none; }
-    .roulette-container { position: relative; overflow: hidden; }
-    .roulette-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #a855f7; z-index: 10; transform: translateX(-50%); }
-    .roulette-track { display: flex; transition: transform 4s cubic-bezier(0.15, 0.9, 0.15, 1); }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-  </style>
-</head>
-<body class="pb-20">
+"""
+Skin case bot (виртуальная валюта, без реальных выплат).
+Фичи: велком-кейс, кейсы с шансами, инвентарь, продажа скинов,
+ежедневный бонус, рефералы, топ игроков.
 
-  <!-- TOP BAR / HEADER -->
-  <header class="flex items-center justify-between p-4 bg-gray-900 border-b border-gray-800">
-    <div class="flex items-center gap-3">
-      <div id="user-avatar" class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-lg font-bold">S</div>
-      <div>
-        <h2 id="user-name" class="font-bold text-sm">Игрок</h2>
-        <span class="text-xs text-purple-400">Уровень 1</span>
-      </div>
-    </div>
-    <div class="bg-gray-800 px-3 py-1.5 rounded-full border border-purple-500/30 flex items-center gap-1.5">
-      <span class="text-yellow-400 font-bold" id="balance">100</span>
-      <span class="text-xs text-gray-400">🟡</span>
-    </div>
-  </header>
+Установка:  pip install aiogram aiosqlite
+Запуск:     BOT_TOKEN=123:abc python skin_bot.py
+"""
+import asyncio
+import os
+import random
+import time
 
-  <main class="p-4">
-    <!-- TAB 1: CASES -->
-    <div id="tab-cases" class="tab-content active space-y-4">
-      
-      <!-- ROULETTE AREA -->
-      <div class="bg-gray-900 rounded-2xl p-4 border border-gray-800 text-center">
-        <h3 id="case-title" class="text-lg font-bold mb-3 text-purple-400">Бесплатный кейс</h3>
-        
-        <div class="roulette-container bg-gray-950 h-24 rounded-xl border border-gray-800 mb-4">
-          <div class="roulette-line"></div>
-          <div id="roulette-track" class="roulette-track h-full items-center">
-            <!-- Items generated via JS -->
-          </div>
-        </div>
+import aiosqlite
+from aiogram import Bot, Dispatcher, F
+from aiogram.filters import Command, CommandObject
+from aiogram.types import CallbackQuery, InlineKeyboardButton as Btn, InlineKeyboardMarkup as Kb, Message
 
-        <button id="open-btn" onclick="spinCase()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 font-bold rounded-xl active:scale-95 transition">
-          Открыть кейс
-        </button>
-      </div>
+DB = "skins.db"
+REF_BONUS = 50
+DAILY_BONUS = 25
 
-      <!-- CASE LIST -->
-      <h3 class="font-bold text-gray-400 mt-6">Выбор кейса</h3>
-      <div class="grid grid-cols-2 gap-3">
-        <div onclick="selectCase('Free', 0)" class="bg-gray-900 p-3 rounded-xl border border-purple-500/50 text-center cursor-pointer">
-          <div class="text-3xl mb-1">📦</div>
-          <div class="font-bold text-sm">Free Case</div>
-          <div class="text-xs text-green-400">БЕСПЛАТНО</div>
-        </div>
-        <div onclick="selectCase('Operation', 50)" class="bg-gray-900 p-3 rounded-xl border border-gray-800 text-center cursor-pointer">
-          <div class="text-3xl mb-1">🎁</div>
-          <div class="font-bold text-sm">SKINOL Case</div>
-          <div class="text-xs text-yellow-400">50 🟡</div>
-        </div>
-      </div>
-    </div>
+# Редкости: (название, эмодзи, вес выпадения, цена продажи min-max)
+RARITY = {
+    "consumer": ("Ширпотреб", "⚪", 50, (5, 15)),
+    "milspec": ("Армейское", "🔵", 30, (20, 60)),
+    "restricted": ("Запрещённое", "🟣", 13, (80, 200)),
+    "classified": ("Засекреченное", "🌸", 5, (250, 600)),
+    "covert": ("Тайное", "🔴", 1.8, (800, 2000)),
+    "gold": ("Редкое золото", "🟡", 0.2, (3000, 8000)),
+}
 
-    <!-- TAB 2: INVENTORY -->
-    <div id="tab-inventory" class="tab-content">
-      <h3 class="font-bold text-lg mb-3">Мой инвентарь</h3>
-      <div id="inventory-list" class="grid grid-cols-2 gap-3">
-        <p class="text-gray-500 text-sm col-span-2 text-center py-8">Инвентарь пуст. Откройте кейс!</p>
-      </div>
-    </div>
+SKINS = {
+    "consumer": ["P250 | Sand Dune", "MP9 | Storm", "Nova | Predator"],
+    "milspec": ["MAC-10 | Neon Rider", "Glock-18 | Water Elemental", "SG 553 | Cyrex"],
+    "restricted": ["AK-47 | Redline", "M4A4 | Desolate Space", "USP-S | Cortex"],
+    "classified": ["AWP | Asiimov", "M4A1-S | Hyper Beast", "Desert Eagle | Blaze"],
+    "covert": ["AK-47 | Fire Serpent", "AWP | Dragon Lore", "M4A4 | Howl"],
+    "gold": ["★ Karambit | Fade", "★ Butterfly Knife | Doppler", "★ Sport Gloves | Vice"],
+}
 
-    <!-- TAB 3: TASKS -->
-    <div id="tab-tasks" class="tab-content space-y-3">
-      <h3 class="font-bold text-lg mb-3">Задания</h3>
-      <div class="bg-gray-900 p-3 rounded-xl flex justify-between items-center border border-gray-800">
-        <div>
-          <div class="font-bold text-sm">Подписка на ТГ канал</div>
-          <div class="text-xs text-yellow-400">+50 🟡</div>
-        </div>
-        <button class="bg-purple-600 px-3 py-1.5 rounded-lg text-xs font-bold">Выполнить</button>
-      </div>
-    </div>
+# Кейсы: id -> (название, цена в кристаллах)
+CASES = {
+    "welcome": ("🎁 Велком-кейс", 0),
+    "basic": ("📦 Базовый кейс", 100),
+    "elite": ("💎 Элитный кейс", 400),
+}
+# Элитный кейс смещает шансы в сторону редких
+ELITE_MULT = {"consumer": 0, "milspec": 0.5, "restricted": 1.5, "classified": 2.5, "covert": 3, "gold": 4}
 
-    <!-- TAB 4: FRIENDS -->
-    <div id="tab-friends" class="tab-content text-center py-6">
-      <h3 class="font-bold text-lg mb-2">Пригласи друзей</h3>
-      <p class="text-xs text-gray-400 mb-4">Получай +20 🟡 за каждого приглашенного друга!</p>
-      <button onclick="shareRef()" class="bg-indigo-600 px-6 py-3 rounded-xl font-bold text-sm">Пригласить друга</button>
-    </div>
-  </main>
 
-  <!-- BOTTOM NAVIGATION (4 TABS LIKE SKINOZ) -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 flex justify-around py-2">
-    <button onclick="switchTab('cases')" class="flex flex-col items-center text-purple-400">
-      <span class="text-xl">📦</span>
-      <span class="text-[10px]">Кейсы</span>
-    </button>
-    <button onclick="switchTab('inventory')" class="flex flex-col items-center text-gray-400">
-      <span class="text-xl">🎒</span>
-      <span class="text-[10px]">Инвентарь</span>
-    </button>
-    <button onclick="switchTab('tasks')" class="flex flex-col items-center text-gray-400">
-      <span class="text-xl">⚡</span>
-      <span class="text-[10px]">Задания</span>
-    </button>
-    <button onclick="switchTab('friends')" class="flex flex-col items-center text-gray-400">
-      <span class="text-xl">👥</span>
-      <span class="text-[10px]">Друзья</span>
-    </button>
-  </nav>
+def roll(case_id: str):
+    weights = []
+    for key, (_, _, w, _) in RARITY.items():
+        mult = ELITE_MULT[key] if case_id == "elite" else 1
+        weights.append(w * mult)
+    key = random.choices(list(RARITY), weights=weights)[0]
+    name = random.choice(SKINS[key])
+    lo, hi = RARITY[key][3]
+    return key, name, random.randint(lo, hi)
 
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
 
-    // User init
-    if (tg.initDataUnsafe?.user) {
-      document.getElementById('user-name').innerText = tg.initDataUnsafe.user.first_name;
-      if (tg.initDataUnsafe.user.photo_url) {
-        document.getElementById('user-avatar').innerHTML = `<img src="${tg.initDataUnsafe.user.photo_url}" class="w-full h-full rounded-full">`;
-      }
-    }
+async def init_db():
+    async with aiosqlite.connect(DB) as db:
+        await db.executescript(
+            """
+            CREATE TABLE IF NOT EXISTS users(
+                id INTEGER PRIMARY KEY, name TEXT, crystals INTEGER DEFAULT 0,
+                welcome_used INTEGER DEFAULT 0, last_daily INTEGER DEFAULT 0,
+                referrer INTEGER, opened INTEGER DEFAULT 0);
+            CREATE TABLE IF NOT EXISTS inventory(
+                id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER,
+                rarity TEXT, skin TEXT, price INTEGER);
+            """
+        )
+        await db.commit()
 
-    let coins = 100;
-    let inventory = [];
-    let currentCost = 0;
 
-    const skins = [
-      { name: 'AK-47 | Redline', rarity: 'red', val: 80, icon: '🔫' },
-      { name: 'M4A4 | Howl', rarity: 'yellow', val: 250, icon: '🔥' },
-      { name: 'AWP | Asiimov', rarity: 'red', val: 120, icon: '🎯' },
-      { name: 'USP-S | Cyrex', rarity: 'purple', val: 30, icon: '🔫' },
-      { name: 'Glock-18 | Water', rarity: 'blue', val: 10, icon: '🔫' }
-    ];
+async def get_user(db, uid):
+    cur = await db.execute("SELECT crystals, welcome_used, last_daily, opened FROM users WHERE id=?", (uid,))
+    return await cur.fetchone()
 
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById(`tab-${tabName}`).classList.add('active');
-    }
 
-    function selectCase(name, cost) {
-      currentCost = cost;
-      document.getElementById('case-title').innerText = name + ' Case';
-    }
+def main_kb():
+    return Kb(inline_keyboard=[
+        [Btn(text="📦 Кейсы", callback_data="cases"), Btn(text="🎒 Инвентарь", callback_data="inv")],
+        [Btn(text="🎁 Бонус дня", callback_data="daily"), Btn(text="🏆 Топ", callback_data="top")],
+        [Btn(text="👥 Пригласить друзей", callback_data="ref")],
+    ])
 
-    function spinCase() {
-      if (coins < currentCost) {
-        alert('Недостаточно монет!');
-        return;
-      }
-      coins -= currentCost;
-      document.getElementById('balance').innerText = coins;
 
-      const track = document.getElementById('roulette-track');
-      track.style.transition = 'none';
-      track.style.transform = 'translateX(0px)';
-      track.innerHTML = '';
+bot = Bot(os.environ["BOT_TOKEN"])
+dp = Dispatcher()
 
-      for (let i = 0; i < 20; i++) {
-        const item = skins[Math.floor(Math.random() * skins.length)];
-        const div = document.createElement('div');
-        div.className = 'flex-shrink-0 w-20 h-20 bg-gray-900 mx-1 rounded-lg border border-gray-700 flex flex-col items-center justify-center text-xs';
-        div.innerHTML = `<span class="text-2xl">${item.icon}</span><span class="truncate w-16 text-center mt-1">${item.name}</span>`;
-        track.appendChild(div);
-      }
 
-      setTimeout(() => {
-        track.style.transition = 'transform 3s cubic-bezier(0.15, 0.9, 0.15, 1)';
-        const winIndex = 15;
-        const wonSkin = skins[Math.floor(Math.random() * skins.length)];
-        track.children[winIndex].innerHTML = `<span class="text-2xl">${wonSkin.icon}</span><span class="truncate w-16 text-center font-bold text-purple-400 mt-1">${wonSkin.name}</span>`;
-        
-        track.style.transform = `translateX(-${winIndex * 88 - 100}px)`;
+@dp.message(Command("start"))
+async def start(m: Message, command: CommandObject):
+    uid = m.from_user.id
+    async with aiosqlite.connect(DB) as db:
+        if not await get_user(db, uid):
+            ref = int(command.args) if command.args and command.args.isdigit() and int(command.args) != uid else None
+            await db.execute("INSERT INTO users(id, name, referrer) VALUES(?,?,?)", (uid, m.from_user.full_name, ref))
+            if ref and await get_user(db, ref):
+                await db.execute("UPDATE users SET crystals=crystals+? WHERE id=?", (REF_BONUS, ref))
+                try:
+                    await bot.send_message(ref, f"👥 По твоей ссылке пришёл друг! +{REF_BONUS} 💎")
+                except Exception:
+                    pass
+            await db.commit()
+    await m.answer(
+        "🔥 <b>Добро пожаловать!</b>\nОткрывай кейсы, собирай скины, продавай их за кристаллы.\n"
+        "Тебя ждёт бесплатный велком-кейс 🎁",
+        reply_markup=main_kb(), parse_mode="HTML",
+    )
 
-        setTimeout(() => {
-          inventory.push(wonSkin);
-          updateInventory();
-          alert(`Вы выиграли: ${wonSkin.name}!`);
-        }, 3200);
-      }, 50);
-    }
 
-    function updateInventory() {
-      const list = document.getElementById('inventory-list');
-      if (inventory.length === 0) return;
-      list.innerHTML = '';
-      inventory.forEach((item, idx) => {
-        list.innerHTML += `
-          <div class="bg-gray-900 p-3 rounded-xl border border-gray-800 text-center">
-            <div class="text-3xl mb-1">${item.icon}</div>
-            <div class="font-bold text-xs truncate">${item.name}</div>
-            <div class="text-xs text-yellow-400 mt-1">${item.val} 🟡</div>
-          </div>
-        `;
-      });
-    }
+@dp.callback_query(F.data == "menu")
+async def menu(c: CallbackQuery):
+    async with aiosqlite.connect(DB) as db:
+        u = await get_user(db, c.from_user.id)
+    await c.message.edit_text(f"💎 Баланс: <b>{u[0]}</b>\nВыбирай действие:", reply_markup=main_kb(), parse_mode="HTML")
 
-    function shareRef() {
-      tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/Skinolbot/app&text=Забирай бесплатные скины CS2 в SKINOL!`);
-    }
-  </script>
-</body>
-</html>
 
+@dp.callback_query(F.data == "cases")
+async def cases(c: CallbackQuery):
+    rows = [[Btn(text=f"{n} — {p} 💎" if p else f"{n} — бесплатно", callback_data=f"open:{cid}")]
+            for cid, (n, p) in CASES.items()]
+    rows.append([Btn(text="⬅️ Назад", callback_data="menu")])
+    await c.message.edit_text("Выбери кейс:", reply_markup=Kb(inline_keyboard=rows))
+
+
+@dp.callback_query(F.data.startswith("open:"))
+async def open_case(c: CallbackQuery):
+    cid = c.data.split(":")[1]
+    name, price = CASES[cid]
+    uid = c.from_user.id
+    async with aiosqlite.connect(DB) as db:
+        crystals, welcome_used, _, _ = await get_user(db, uid)
+        if cid == "welcome":
+            if welcome_used:
+                return await c.answer("Велком-кейс уже открыт!", show_alert=True)
+            await db.execute("UPDATE users SET welcome_used=1 WHERE id=?", (uid,))
+        elif crystals < price:
+            return await c.answer("Не хватает кристаллов 💎", show_alert=True)
+        else:
+            await db.execute("UPDATE users SET crystals=crystals-? WHERE id=?", (price, uid))
+        await db.commit()
+
+    await c.answer()
+    # "Анимация" прокрутки
+    for _ in range(4):
+        k = random.choice(list(RARITY))
+        await c.message.edit_text(f"🎰 Крутим {name}...\n{RARITY[k][1]} {random.choice(SKINS[k])}")
+        await asyncio.sleep(0.6)
+
+    key, skin, val = roll(cid)
+    async with aiosqlite.connect(DB) as db:
+        await db.execute("INSERT INTO inventory(user_id, rarity, skin, price) VALUES(?,?,?,?)", (uid, key, skin, val))
+        await db.execute("UPDATE users SET opened=opened+1 WHERE id=?", (uid,))
+        await db.commit()
+    label, emoji = RARITY[key][0], RARITY[key][1]
+    kb = Kb(inline_keyboard=[
+        [Btn(text="🔁 Ещё раз", callback_data=f"open:{cid}"), Btn(text="🎒 Инвентарь", callback_data="inv")],
+        [Btn(text="⬅️ Меню", callback_data="menu")],
+    ])
+    await c.message.edit_text(
+        f"{emoji} <b>{skin}</b>\nРедкость: {label}\nЦена: {val} 💎", reply_markup=kb, parse_mode="HTML")
+
+
+@dp.callback_query(F.data == "inv")
+async def inventory(c: CallbackQuery):
+    async with aiosqlite.connect(DB) as db:
+        cur = await db.execute(
+            "SELECT id, rarity, skin, price FROM inventory WHERE user_id=? ORDER BY price DESC LIMIT 10", (c.from_user.id,))
+        items = await cur.fetchall()
+    if not items:
+        return await c.message.edit_text("Инвентарь пуст. Открой кейс!", reply_markup=Kb(
+            inline_keyboard=[[Btn(text="📦 Кейсы", callback_data="cases")]]))
+    rows = [[Btn(text=f"{RARITY[r][1]} {s} · продать за {p}💎", callback_data=f"sell:{i}")] for i, r, s, p in items]
+    rows.append([Btn(text="💰 Продать всё", callback_data="sellall"), Btn(text="⬅️ Назад", callback_data="menu")])
+    await c.message.edit_text("🎒 Твои лучшие скины (топ-10):", reply_markup=Kb(inline_keyboard=rows))
+
+
+@dp.callback_query(F.data.startswith("sell:"))
+async def sell(c: CallbackQuery):
+    item_id = int(c.data.split(":")[1])
+    async with aiosqlite.connect(DB) as db:
+        cur = await db.execute("SELECT price FROM inventory WHERE id=? AND user_id=?", (item_id, c.from_user.id))
+        row = await cur.fetchone()
+        if row:
+            await db.execute("DELETE FROM inventory WHERE id=?", (item_id,))
+            await db.execute("UPDATE users SET crystals=crystals+? WHERE id=?", (row[0], c.from_user.id))
+            await db.commit()
+            await c.answer(f"+{row[0]} 💎")
+    await inventory(c)
+
+
+@dp.callback_query(F.data == "sellall")
+async def sell_all(c: CallbackQuery):
+    async with aiosqlite.connect(DB) as db:
+        cur = await db.execute("SELECT COALESCE(SUM(price),0) FROM inventory WHERE user_id=?", (c.from_user.id,))
+        total = (await cur.fetchone())[0]
+        await db.execute("DELETE FROM inventory WHERE user_id=?", (c.from_user.id,))
+        await db.execute("UPDATE users SET crystals=crystals+? WHERE id=?", (total, c.from_user.id))
+        await db.commit()
+    await c.answer(f"Продано на {total} 💎", show_alert=True)
+    await inventory(c)
+
+
+@dp.callback_query(F.data == "daily")
+async def daily(c: CallbackQuery):
+    async with aiosqlite.connect(DB) as db:
+        _, _, last, _ = await get_user(db, c.from_user.id)
+        now = int(time.time())
+        if now - last < 86400:
+            left = (86400 - (now - last)) // 3600
+            return await c.answer(f"Приходи через ~{left} ч.", show_alert=True)
+        await db.execute("UPDATE users SET crystals=crystals+?, last_daily=? WHERE id=?", (DAILY_BONUS, now, c.from_user.id))
+        await db.commit()
+    await c.answer(f"+{DAILY_BONUS} 💎 Бонус получен!", show_alert=True)
+
+
+@dp.callback_query(F.data == "top")
+async def top(c: CallbackQuery):
+    async with aiosqlite.connect(DB) as db:
+        cur = await db.execute("SELECT name, opened FROM users ORDER BY opened DESC LIMIT 10")
+        rows = await cur.fetchall()
+    text = "🏆 <b>Топ по открытым кейсам</b>\n" + "\n".join(f"{i+1}. {n} — {o}" for i, (n, o) in enumerate(rows))
+    await c.message.edit_text(text, parse_mode="HTML",
+                              reply_markup=Kb(inline_keyboard=[[Btn(text="⬅️ Назад", callback_data="menu")]]))
+
+
+@dp.callback_query(F.data == "ref")
+async def ref(c: CallbackQuery):
+    me = await bot.get_me()
+    link = f"https://t.me/{me.username}?start={c.from_user.id}"
+    await c.message.edit_text(f"👥 Приглашай друзей и получай по {REF_BONUS} 💎 за каждого:\n{link}",
+                              reply_markup=Kb(inline_keyboard=[[Btn(text="⬅️ Назад", callback_data="menu")]]))
+
+
+async def main():
+    await init_db()
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
