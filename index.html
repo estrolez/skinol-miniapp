@@ -1,177 +1,169 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Skinol</title>
 <script async src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+:root{--g:#1fff8f;--bg:#0a0a0f;--c:#14141a;--b:#26262e;--t:#8b8b96}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:#0d1117;color:#e6edf3;font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:70px}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#161b22;position:sticky;top:0;z-index:5}
-.logo{font-weight:800;font-size:20px;letter-spacing:1px;color:#ff6b3d}
-.bal{background:#21262d;padding:6px 14px;border-radius:20px;font-weight:700}
-main{padding:14px;max-width:520px;margin:0 auto}
-.card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
-.card .ic{font-size:40px}.card .info{flex:1}.card .t{font-weight:700}.card .p{color:#8b949e;font-size:14px}
-button{background:#ff6b3d;color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-size:15px;cursor:pointer}
-button:disabled{opacity:.4}button.sec{background:#30363d}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#161b22;border-top:1px solid #30363d;padding-bottom:env(safe-area-inset-bottom)}
-nav div{flex:1;text-align:center;padding:12px 0;color:#8b949e;font-weight:600;font-size:14px}
-nav div.on{color:#ff6b3d}
+body{margin:0;background:var(--bg);color:#fff;font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:84px}
 .hide{display:none!important}
-.vp{position:relative;overflow:hidden;background:#010409;border-radius:12px;height:130px;margin:10px 0}
-.vp::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:#ff6b3d;transform:translateX(-50%);z-index:2}
-.strip{display:flex;height:100%;align-items:center;will-change:transform}
-.it{flex:0 0 104px;margin-right:8px;height:104px;border-radius:10px;background:#161b22;border-bottom:4px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:11px;padding:4px}
-.it b{font-size:28px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10;display:flex;align-items:center;justify-content:center;padding:16px}
-.box{background:#161b22;border-radius:16px;padding:18px;width:100%;max-width:440px;text-align:center}
-.win{font-size:64px;margin:6px 0}.name{font-size:20px;font-weight:800;margin:4px 0}
-.row{display:flex;gap:8px;justify-content:center;margin-top:14px}
-.inv{display:flex;align-items:center;gap:10px;background:#161b22;border-left:4px solid var(--c);border-radius:10px;padding:10px;margin-bottom:8px}
-.inv .n{flex:1;font-size:14px}.inv small{color:#8b949e}
+main{max-width:520px;margin:0 auto;padding:12px}
+.card{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:12px}
+.g{color:var(--g)}.m{color:var(--t);font-size:13px}.big{font-size:38px;font-weight:800;color:var(--g)}
+.logo{text-align:center;font-size:44px;font-weight:900;font-style:italic;letter-spacing:2px;color:var(--g);text-shadow:0 0 30px #1fff8f88;margin:22px 0}
+button{background:var(--g);color:#04130b;border:0;border-radius:14px;padding:13px 16px;font-weight:800;font-size:15px;cursor:pointer}
+button.s{background:#1d1d25;color:#fff;border:1px solid var(--b)}button:disabled{opacity:.35}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.tick{display:flex;overflow-x:auto;gap:8px;padding:8px 12px;background:#0e0e14;border-bottom:1px solid var(--b);scrollbar-width:none}
+.tk{flex:0 0 150px;background:var(--c);border-radius:10px;padding:8px;border-left:3px solid var(--c2);font-size:12px}
+.tk b{display:block;font-size:13px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#111118;border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom)}
+nav div{flex:1;text-align:center;padding:10px 0;color:var(--t);font-size:12px;font-weight:600}
+nav div i{display:block;font-style:normal;font-size:22px}nav div.on{color:var(--g)}
+.tag{display:inline-block;background:var(--g);color:#04130b;font-weight:800;font-size:13px;padding:5px 10px;border-radius:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sk{border:1px solid var(--c2);border-radius:16px;padding:10px;background:radial-gradient(circle at 50% 35%,var(--c2)55,transparent 70%),var(--c);position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+.sk .em{font-size:46px;text-align:center;flex:1;display:flex;align-items:center;justify-content:center}
+.sk img{width:100%;height:80px;object-fit:contain}
+.sk .n{font-weight:700;font-size:13px}.sk .p{font-weight:800;margin-top:2px}
+.sk .x{position:absolute;top:8px;right:8px;background:#0a0a0f;border-radius:10px;padding:3px 8px;font-size:12px;font-weight:800;color:var(--g)}
+.sk button{margin-top:8px;padding:8px;font-size:13px}.sk.sel{box-shadow:0 0 0 2px var(--g)}
+.case{display:flex;align-items:center;gap:12px}.case .ic{font-size:44px}.case .i{flex:1}
+.vp{position:relative;overflow:hidden;background:#05050a;border-radius:14px;height:130px;margin:10px 0}
+.vp::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--g);transform:translateX(-50%);z-index:2;box-shadow:0 0 12px var(--g)}
+.strip{display:flex;height:100%;align-items:center}
+.it{flex:0 0 104px;margin-right:8px;height:104px;border-radius:12px;background:var(--c);border-bottom:4px solid var(--c2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:11px;padding:4px}.it b{font-size:28px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+.box{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:18px;width:100%;max-width:440px;text-align:center;max-height:90vh;overflow:auto}
+input{width:100%;background:#0a0a0f;border:1px solid var(--b);color:#fff;border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
+.bar{height:8px;background:#22222b;border-radius:6px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--g)}
+.chips{display:flex;gap:8px;margin:10px 0}.chip{flex:1;text-align:center;padding:10px 0;border-radius:10px;background:#1d1d25;font-weight:700}.chip.on{background:var(--g);color:#04130b}
+.av{width:90px;height:90px;border-radius:50%;border:3px solid var(--g);margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:40px;background:#0e0e14;box-shadow:0 0 24px #1fff8f55}
 h3{margin:4px 0 12px}
-</style>
-</head>
-<body>
-<header><div class="logo">SKINOL</div><div class="bal">💎 <span id="bal">0</span></div></header>
-<main>
-  <section id="tab-cases"></section>
-  <section id="tab-inv" class="hide"></section>
-  <section id="tab-bonus" class="hide"></section>
-</main>
+</style></head><body>
+<div id="view"></div>
 <nav>
-  <div class="on" data-t="cases">📦 Кейсы</div>
-  <div data-t="inv">🎒 Инвентарь</div>
-  <div data-t="bonus">🎁 Бонус</div>
+<div data-t="home"><i>🏠</i>Главная</div><div data-t="games"><i>🎮</i>Игры</div>
+<div data-t="inv"><i>🎒</i>Инвентарь</div><div data-t="prof"><i>👤</i>Профиль</div>
 </nav>
 <div id="modal" class="modal hide"><div class="box" id="box"></div></div>
-
 <script>
-let tg = null;
-function initTg() { try { tg = window.Telegram && Telegram.WebApp; if (tg) { tg.ready(); tg.expand(); } } catch (e) {} }
-initTg(); window.addEventListener("load", initTg);
+let tg=null;function initTg(){try{tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand()}}catch(e){}}
+initTg();addEventListener("load",initTg);
 
-const RAR = {
-  consumer:  {n:"Ширпотреб",   c:"#b0c3d9", w:50,  p:[5,15],      e:"⚪"},
-  milspec:   {n:"Армейское",    c:"#4b69ff", w:30,  p:[20,60],     e:"🔵"},
-  restricted:{n:"Запрещённое", c:"#8847ff", w:13,  p:[80,200],    e:"🟣"},
-  classified:{n:"Засекреченное",c:"#d32ce6",w:5,   p:[250,600],   e:"🌸"},
-  covert:    {n:"Тайное",       c:"#eb4b4b", w:1.8, p:[800,2000],  e:"🔴"},
-  gold:      {n:"Редкое золото",c:"#ffd700", w:0.2, p:[3000,8000], e:"🟡"}
-};
-const SKINS = {
-  consumer:["P250 | Sand Dune","MP9 | Storm","Nova | Predator"],
-  milspec:["MAC-10 | Neon Rider","Glock-18 | Water Elemental","SG 553 | Cyrex"],
-  restricted:["AK-47 | Redline","M4A4 | Desolate Space","USP-S | Cortex"],
-  classified:["AWP | Asiimov","M4A1-S | Hyper Beast","Desert Eagle | Blaze"],
-  covert:["AK-47 | Fire Serpent","AWP | Dragon Lore","M4A4 | Howl"],
-  gold:["★ Karambit | Fade","★ Butterfly | Doppler","★ Sport Gloves | Vice"]
-};
-const ELITE = {consumer:0, milspec:.5, restricted:1.5, classified:2.5, covert:3, gold:4};
-const CASES = {
-  welcome:{n:"Велком-кейс",  e:"🎁", price:0},
-  basic:  {n:"Базовый кейс", e:"📦", price:100},
-  elite:  {n:"Элитный кейс", e:"💎", price:400}
-};
-const DAILY = 25;
+const RAR={consumer:{n:"Ширпотреб",c:"#b0c3d9",w:50,p:[5,15]},milspec:{n:"Армейское",c:"#4b69ff",w:30,p:[20,60]},
+restricted:{n:"Запрещённое",c:"#8847ff",w:13,p:[80,200]},classified:{n:"Засекреченное",c:"#d32ce6",w:5,p:[250,600]},
+covert:{n:"Тайное",c:"#eb4b4b",w:1.8,p:[800,2000]},gold:{n:"Редкое золото",c:"#ffd700",w:.2,p:[3000,8000]}};
+const SK={consumer:["P250 | Sand Dune","MP9 | Storm","Nova | Predator"],milspec:["MAC-10 | Neon Rider","Glock-18 | Water Elemental","SG 553 | Cyrex"],
+restricted:["AK-47 | Redline","M4A4 | Desolate Space","USP-S | Cortex"],classified:["AWP | Asiimov","M4A1-S | Hyper Beast","Desert Eagle | Blaze"],
+covert:["AK-47 | Fire Serpent","AWP | Dragon Lore","M4A4 | Howl"],gold:["★ Karambit | Fade","★ Butterfly | Doppler","★ Sport Gloves | Vice"]};
+const EL={consumer:0,milspec:.5,restricted:1.5,classified:2.5,covert:3,gold:4};
+const CASES={welcome:{n:"Велком-кейс",e:"🎁",p:0},basic:{n:"Базовый кейс",e:"📦",p:100},elite:{n:"Элитный кейс",e:"💎",p:400}};
+const $=id=>document.getElementById(id),rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a,fmt=n=>Math.round(n).toLocaleString("ru-RU");
+let S;try{S=JSON.parse(localStorage.getItem("skinol2"))}catch(e){}
+S=S||{cr:100,welcome:false,inv:[],out:[],opened:0,upg:0,xp:0,since:Date.now(),rush:Date.now()+72e5,trade:"",sel:null,mult:2};
+const save=()=>{try{localStorage.setItem("skinol2",JSON.stringify(S))}catch(e){}};
+let tab="home";
 
-let S;
-try { S = JSON.parse(localStorage.getItem("skinol")); } catch (e) {}
-S = S || {crystals: 100, welcome: false, last: 0, inv: [], opened: 0};
-const save = () => { try { localStorage.setItem("skinol", JSON.stringify(S)); } catch (e) {} };
-const $ = id => document.getElementById(id);
-const rnd = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const emo=r=>r==="gold"?"🔪":"🔫";
+function rarOf(p){return Object.keys(RAR).reverse().find(k=>p>=RAR[k].p[0])||"consumer"}
+function mk(r,price,cp){return{id:Date.now()+Math.random(),r,name:SK[r][rnd(0,SK[r].length-1)],price,mult:cp?price/cp:0}}
+function roll(cid){const ks=Object.keys(RAR),ws=ks.map(k=>RAR[k].w*(cid==="elite"?EL[k]:1));
+let x=Math.random()*ws.reduce((a,b)=>a+b,0),k=ks[0];for(let i=0;i<ks.length;i++){x-=ws[i];if(x<=0){k=ks[i];break}}
+return mk(k,rnd(RAR[k].p[0],RAR[k].p[1]),CASES[cid].p)}
+function tile(i,e){e=e||{};const c=RAR[i.r].c;
+return`<div class="sk${e.sel?" sel":""}" style="--c2:${c}" ${e.click?`onclick="${e.click}"`:""}>
+${i.mult?`<div class="x">⚡×${i.mult.toFixed(2)}</div>`:""}
+<div class="em">${i.img?`<img src="${i.img}">`:emo(i.r)}</div>
+<div class="n">${i.name}</div><div class="m">${RAR[i.r].n}</div><div class="p g">💎 ${fmt(i.price)}</div>${e.btn||""}</div>`}
+const lvl=()=>1+Math.floor(S.xp/100);
 
-function roll(cid) {
-  const keys = Object.keys(RAR);
-  const ws = keys.map(k => RAR[k].w * (cid === "elite" ? ELITE[k] : 1));
-  let x = Math.random() * ws.reduce((a, b) => a + b, 0), k = keys[0];
-  for (let i = 0; i < keys.length; i++) { x -= ws[i]; if (x <= 0) { k = keys[i]; break; } }
-  const name = SKINS[k][rnd(0, SKINS[k].length - 1)];
-  return {r: k, name, price: rnd(RAR[k].p[0], RAR[k].p[1]), id: Date.now() + Math.random()};
-}
+function home(){
+const feed=[...S.inv.slice(-3).reverse(),...Array.from({length:5},()=>roll("basic"))];
+return`<div class="tick"><div class="tk" style="--c2:#ffd700"><span class="tag" style="font-size:10px">DEMO</span><b>Лента дропов</b></div>${feed.map(i=>`<div class="tk" style="--c2:${RAR[i.r].c}"><span class="g">💎 ${fmt(i.price)}</span><b>${i.name}</b><span class="m">${RAR[i.r].n}</span></div>`).join("")}</div>
+<main><div class="logo">SKINOL</div>
+<div class="card"><div class="m">Баланс</div><div class="big">💎 ${fmt(S.cr)}</div>
+<div class="row" style="margin-top:14px"><button onclick="deposit()">Пополнить</button><button class="s" onclick="go('inv')">Вывести</button></div></div>
+<div class="card" style="border-color:var(--g)"><div style="display:flex;justify-content:space-between;align-items:center"><span class="tag">RUSH DROP</span><span id="rt" style="background:#0a0a0f;border-radius:12px;padding:8px 14px;font-weight:800"></span></div>
+<p class="m">Раз в 2 часа — бесплатные кристаллы. Заходи и забирай!</p><button id="rb" style="width:100%" onclick="rush()">Забрать +50 💎</button></div></main>`}
 
-function render() {
-  $("bal").textContent = S.crystals;
-  // cases
-  $("tab-cases").innerHTML = "<h3>Выбери кейс</h3>" + Object.entries(CASES).map(([id, c]) => {
-    const used = id === "welcome" && S.welcome;
-    const lack = c.price > S.crystals;
-    return `<div class="card"><div class="ic">${c.e}</div><div class="info"><div class="t">${c.n}</div>
-      <div class="p">${c.price ? c.price + " 💎" : "бесплатно (1 раз)"}</div></div>
-      <button ${used || lack ? "disabled" : ""} onclick="openCase('${id}')">${used ? "Открыт" : "Открыть"}</button></div>`;
-  }).join("");
-  // inventory
-  const inv = [...S.inv].sort((a, b) => b.price - a.price);
-  $("tab-inv").innerHTML = `<h3>Инвентарь (${inv.length})</h3>` + (inv.length
-    ? inv.map(i => `<div class="inv" style="--c:${RAR[i.r].c}"><div class="n">${RAR[i.r].e} ${i.name}<br><small>${RAR[i.r].n}</small></div>
-        <button class="sec" onclick="sell(${i.id})">${i.price} 💎</button></div>`).join("")
-      + `<button style="width:100%;margin-top:6px" onclick="sellAll()">Продать всё</button>`
-    : `<div class="card"><div class="info p">Пока пусто. Открой кейс!</div></div>`);
-  // bonus
-  const left = 86400000 - (Date.now() - S.last);
-  const ready = left <= 0;
-  $("tab-bonus").innerHTML = `<h3>Бонус дня</h3><div class="card"><div class="ic">🎁</div><div class="info">
-    <div class="t">+${DAILY} 💎 каждый день</div><div class="p">${ready ? "Можно забрать!" : "Через ~" + Math.ceil(left / 3600000) + " ч."}</div></div>
-    <button ${ready ? "" : "disabled"} onclick="daily()">Забрать</button></div>
-    <div class="card"><div class="info p">Открыто кейсов: <b>${S.opened}</b></div></div>`;
-}
+function games(){
+const inv=S.inv;
+const cs=Object.entries(CASES).map(([id,c])=>{const used=id==="welcome"&&S.welcome;
+return`<div class="card case"><div class="ic">${c.e}</div><div class="i"><b>${c.n}</b><div class="m">${c.p?fmt(c.p)+" 💎":"бесплатно, 1 раз"}</div></div>
+<button ${used||c.p>S.cr?"disabled":""} onclick="openCase('${id}')">${used?"Открыт":"Открыть"}</button></div>`}).join("");
+const sel=inv.find(i=>i.id===S.sel),ch=Math.min(95,95/S.mult);
+return`<main><h3>Кейсы</h3>${cs}<h3>⚡ Апгрейдер</h3><div class="card">
+${inv.length?`<div class="m">Выбери скин:</div><div class="grid" style="margin:10px 0;max-height:340px;overflow:auto">${[...inv].sort((a,b)=>b.price-a.price).slice(0,8).map(i=>tile(i,{click:`S.sel=${i.id};render()`,sel:i.id===S.sel})).join("")}</div>
+<div class="chips">${[1.5,2,3,5,10].map(m=>`<div class="chip ${m===S.mult?"on":""}" onclick="S.mult=${m};render()">×${m}</div>`).join("")}</div>
+${sel?`<p class="m">Шанс: <b class="g">${ch.toFixed(1)}%</b> → скин за ~💎 ${fmt(sel.price*S.mult)}</p>`:""}
+<button style="width:100%" ${sel?"":"disabled"} onclick="upgrade()">Апгрейд</button>`:`<div class="m">Сначала выбей скины в кейсах.</div>`}</div></main>`}
 
-function openCase(cid) {
-  const c = CASES[cid];
-  if (cid === "welcome" && S.welcome) return;
-  if (S.crystals < c.price) return;
-  S.crystals -= c.price;
-  if (cid === "welcome") S.welcome = true;
-  const win = roll(cid);
-  S.inv.push(win); S.opened++; save(); render();
+function invView(){
+const l=[...S.inv].sort((a,b)=>b.price-a.price);
+return`<main><h3>Инвентарь (${l.length})</h3>
+${l.length?`<div class="grid">${l.map(i=>tile(i,{btn:`<div class="row"><button class="s" onclick="sell(${i.id})">Продать</button><button onclick="wd(${i.id})">Вывести</button></div>`})).join("")}</div>
+<button class="s" style="width:100%;margin-top:12px" onclick="sellAll()">Продать всё</button>`:`<div class="card m">Пока пусто. Открой кейс в разделе «Игры».</div>`}
+${S.out.length?`<h3 style="margin-top:20px">История вывода</h3>${S.out.slice().reverse().map(o=>`<div class="card" style="padding:12px"><b>${o.name}</b> <span class="g">💎 ${fmt(o.price)}</span><div class="m">${new Date(o.t).toLocaleString("ru-RU")} · демо-вывод ✔</div></div>`).join("")}`:""}</main>`}
 
-  // build strip
-  const WIN_IDX = 36, TOTAL = 44;
-  const items = [];
-  for (let i = 0; i < TOTAL; i++) items.push(i === WIN_IDX ? win : roll(cid));
-  $("box").innerHTML = `<h3>${c.e} ${c.n}</h3><div class="vp"><div class="strip" id="strip">` +
-    items.map(i => `<div class="it" style="--c:${RAR[i.r].c}"><b>${RAR[i.r].e}</b>${i.name}</div>`).join("") +
-    `</div></div><div id="res"></div>`;
-  $("modal").classList.remove("hide");
+function prof(){
+const days=Math.floor((Date.now()-S.since)/864e5)+1,pct=S.xp%100;
+const ach=[S.opened>=1,S.opened>=10,S.opened>=50,S.upg>=1,S.out.length>=1,S.cr>=1000,S.inv.length>=10].filter(Boolean).length;
+const tot=Math.max(1,S.opened+S.upg),pc=Math.round(S.opened/tot*100);
+const u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user,name=u?(u.first_name||"Игрок"):"Игрок";
+const top=[...S.inv,...S.out].sort((a,b)=>b.price-a.price).slice(0,4);
+return`<main><div class="card" style="text-align:center"><div class="m"><span class="g">●</span> Онлайн</div>
+<div class="av" style="margin-top:8px">${name[0].toUpperCase()}</div><div class="tag" style="margin-top:-14px;position:relative">LVL ${lvl()}</div>
+<h2 style="margin:10px 0 2px">${name}</h2><div class="m" style="display:flex;justify-content:space-between"><span>До ${lvl()+1} уровня</span><span>${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div>
+<hr style="border:0;border-top:1px solid var(--b);margin:14px 0"><div class="m">С нами ${days} день</div>
+<div class="m" style="margin-top:6px">Открыто кейсов: ${S.opened} · Апгрейдов: ${S.upg}</div></div>
+<div class="card g" style="display:flex;justify-content:space-between"><span>🏆 Ачивки ${ach}/7</span><span>›</span></div>
+<div class="card"><div class="m">💎 БАЛАНС</div><div class="big" style="font-size:30px">${fmt(S.cr)}</div></div>
+<div class="card"><b>ЛЮБИМЫЕ РЕЖИМЫ</b><div class="bar" style="height:12px;margin:12px 0"><i style="width:${pc}%"></i></div><span class="g">● Кейсы ${pc}%</span> &nbsp;<span class="m">● Апгрейдер ${100-pc}%</span></div>
+<div class="card"><b>📦 ТОП МОИХ СКИНОВ</b><div class="grid" style="margin-top:12px">${top.length?top.map(i=>tile(i)).join(""):'<div class="m">Пока нет скинов</div>'}</div></div>
+<div class="card"><b>Trade-ссылка Steam</b><input id="tl" placeholder="https://steamcommunity.com/tradeoffer/new/?..." value="${S.trade}"><button class="s" style="width:100%" onclick="S.trade=$('tl').value;save();alert('Сохранено')">Сохранить</button></div></main>`}
 
-  const strip = $("strip"), vpw = strip.parentElement.clientWidth;
-  const target = WIN_IDX * 112 + 52 - vpw / 2 + rnd(-35, 35);
-  strip.style.transform = "translateX(0)";
-  strip.getBoundingClientRect();
-  strip.style.transition = "transform 5.5s cubic-bezier(.12,.6,.1,1)";
-  strip.style.transform = `translateX(${-target}px)`;
-  try { tg && tg.HapticFeedback.impactOccurred("medium"); } catch (e) {}
+function render(){$("view").innerHTML={home,games,inv:invView,prof}[tab]();
+document.querySelectorAll("nav div").forEach(d=>d.classList.toggle("on",d.dataset.t===tab));tick()}
+function go(t){tab=t;render();scrollTo(0,0)}
+document.querySelectorAll("nav div").forEach(d=>d.onclick=()=>go(d.dataset.t));
+function tick(){const t=$("rt");if(!t)return;const l=S.rush-Date.now(),b=$("rb");
+if(l<=0){t.textContent="Готово!";b.disabled=false}else{const s=Math.floor(l/1e3);
+t.textContent=[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,"0")).join(":");b.disabled=true}}
+setInterval(tick,1000);
 
-  setTimeout(() => {
-    $("res").innerHTML = `<div class="win">${RAR[win.r].e}</div><div class="name" style="color:${RAR[win.r].c}">${win.name}</div>
-      <div class="p" style="color:#8b949e">${RAR[win.r].n} · ${win.price} 💎</div>
-      <div class="row"><button class="sec" onclick="sell(${win.id});closeM()">Продать</button>
-      <button onclick="closeM()">Забрать</button></div>`;
-    try { tg && tg.HapticFeedback.notificationOccurred("success"); } catch (e) {}
-  }, 5700);
-}
-
-function closeM() { $("modal").classList.add("hide"); render(); }
-function sell(id) {
-  const i = S.inv.findIndex(x => x.id === id);
-  if (i < 0) return;
-  S.crystals += S.inv[i].price; S.inv.splice(i, 1); save(); render();
-}
-function sellAll() { S.crystals += S.inv.reduce((a, b) => a + b.price, 0); S.inv = []; save(); render(); }
-function daily() {
-  if (Date.now() - S.last < 86400000) return;
-  S.crystals += DAILY; S.last = Date.now(); save(); render();
-}
-
-document.querySelectorAll("nav div").forEach(d => d.onclick = () => {
-  document.querySelectorAll("nav div").forEach(x => x.classList.toggle("on", x === d));
-  ["cases", "inv", "bonus"].forEach(t => $("tab-" + t).classList.toggle("hide", t !== d.dataset.t));
-  render();
-});
+function showM(h){$("box").innerHTML=h;$("modal").classList.remove("hide")}
+function closeM(){$("modal").classList.add("hide");render()}
+function rush(){if(S.rush>Date.now())return;S.cr+=50;S.rush=Date.now()+72e5;save();render()}
+function deposit(){showM(`<h3>Пополнить</h3><p class="m">Демо-режим: реальные платежи отключены.<br>Получи бесплатные кристаллы:</p>
+<div class="row"><button onclick="S.cr+=100;save();closeM()">+100 💎</button><button onclick="S.cr+=500;save();closeM()">+500 💎</button></div>
+<button class="s" style="width:100%;margin-top:10px" onclick="closeM()">Закрыть</button>`)}
+function sell(id){const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;S.cr+=S.inv[i].price;S.inv.splice(i,1);save();render()}
+function sellAll(){S.cr+=S.inv.reduce((a,b)=>a+b.price,0);S.inv=[];save();render()}
+function wd(id){const it=S.inv.find(x=>x.id===id);if(!it)return;
+showM(`<h3>Вывод скина</h3><div class="grid" style="grid-template-columns:1fr;text-align:left">${tile(it)}</div>
+<input id="wl" placeholder="Trade-ссылка Steam" value="${S.trade}">
+<p class="m">Демо-режим: скин не отправляется в реальный Steam, операция только записывается в историю.</p>
+<div class="row"><button class="s" onclick="closeM()">Отмена</button><button onclick="doWd(${id})">Вывести</button></div>`)}
+function doWd(id){const l=$("wl").value.trim();if(!/^https?:\/\/.+/.test(l)){alert("Вставь trade-ссылку");return}
+S.trade=l;const i=S.inv.findIndex(x=>x.id===id);S.out.push({...S.inv[i],t:Date.now()});S.inv.splice(i,1);save();closeM()}
+function upgrade(){const it=S.inv.find(x=>x.id===S.sel);if(!it)return;const ch=Math.min(95,95/S.mult),ok=Math.random()*100<ch,m=S.mult;
+showM(`<h3>⚡ Апгрейд</h3><div class="big" style="font-size:54px">${ch.toFixed(1)}%</div><p class="m">Крутим...</p>`);
+try{tg&&tg.HapticFeedback.impactOccurred("heavy")}catch(e){}
+setTimeout(()=>{const i=S.inv.findIndex(x=>x.id===it.id);S.inv.splice(i,1);S.upg++;S.xp+=25;S.sel=null;let r;
+if(ok){const np=Math.round(it.price*m),n=mk(rarOf(np),np,0);n.mult=m;S.inv.push(n);r=`<div style="font-size:54px">✅</div><b class="g">Успех!</b><p>${n.name}<br>💎 ${fmt(np)}</p>`}
+else r=`<div style="font-size:54px">❌</div><b>Не повезло</b><p class="m">${it.name} сгорел</p>`;
+save();$("box").innerHTML=r+`<button style="width:100%;margin-top:10px" onclick="closeM()">Ок</button>`},2200)}
+function openCase(cid){const c=CASES[cid];if(cid==="welcome"&&S.welcome)return;if(S.cr<c.p)return;
+S.cr-=c.p;if(cid==="welcome")S.welcome=true;const win=roll(cid);S.inv.push(win);S.opened++;S.xp+=10;save();
+const W=36,items=Array.from({length:44},(_,i)=>i===W?win:roll(cid));
+showM(`<h3>${c.e} ${c.n}</h3><div class="vp"><div class="strip" id="st">${items.map(i=>`<div class="it" style="--c2:${RAR[i.r].c}"><b>${emo(i.r)}</b>${i.name}</div>`).join("")}</div></div><div id="res"></div>`);
+const st=$("st"),w=st.parentElement.clientWidth;st.style.transform="translateX(0)";st.getBoundingClientRect();
+st.style.transition="transform 5.5s cubic-bezier(.12,.6,.1,1)";st.style.transform=`translateX(${-(W*112+52-w/2+rnd(-35,35))}px)`;
+try{tg&&tg.HapticFeedback.impactOccurred("medium")}catch(e){}
+setTimeout(()=>{$("res").innerHTML=`<div style="font-size:60px">${emo(win.r)}</div><b style="font-size:19px;color:${RAR[win.r].c}">${win.name}</b>
+<div class="m">${RAR[win.r].n} · 💎 ${fmt(win.price)} · ⚡×${win.mult.toFixed(2)}</div>
+<div class="row" style="margin-top:14px"><button class="s" onclick="sell(${win.id});closeM()">Продать</button><button onclick="closeM()">Забрать</button></div>`},5700)}
 render();
-</script>
-</body>
-</html>
+</script></body></html>
