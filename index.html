@@ -1,169 +1,253 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<title>Skinol</title>
-<script async src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-:root{--g:#1fff8f;--bg:#0a0a0f;--c:#14141a;--b:#26262e;--t:#8b8b96}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:#fff;font-family:-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:84px}
-.hide{display:none!important}
-main{max-width:520px;margin:0 auto;padding:12px}
-.card{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:16px;margin-bottom:12px}
-.g{color:var(--g)}.m{color:var(--t);font-size:13px}.big{font-size:38px;font-weight:800;color:var(--g)}
-.logo{text-align:center;font-size:44px;font-weight:900;font-style:italic;letter-spacing:2px;color:var(--g);text-shadow:0 0 30px #1fff8f88;margin:22px 0}
-button{background:var(--g);color:#04130b;border:0;border-radius:14px;padding:13px 16px;font-weight:800;font-size:15px;cursor:pointer}
-button.s{background:#1d1d25;color:#fff;border:1px solid var(--b)}button:disabled{opacity:.35}
-.row{display:flex;gap:10px}.row>*{flex:1}
-.tick{display:flex;overflow-x:auto;gap:8px;padding:8px 12px;background:#0e0e14;border-bottom:1px solid var(--b);scrollbar-width:none}
-.tk{flex:0 0 150px;background:var(--c);border-radius:10px;padding:8px;border-left:3px solid var(--c2);font-size:12px}
-.tk b{display:block;font-size:13px}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#111118;border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom)}
-nav div{flex:1;text-align:center;padding:10px 0;color:var(--t);font-size:12px;font-weight:600}
-nav div i{display:block;font-style:normal;font-size:22px}nav div.on{color:var(--g)}
-.tag{display:inline-block;background:var(--g);color:#04130b;font-weight:800;font-size:13px;padding:5px 10px;border-radius:8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.sk{border:1px solid var(--c2);border-radius:16px;padding:10px;background:radial-gradient(circle at 50% 35%,var(--c2)55,transparent 70%),var(--c);position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
-.sk .em{font-size:46px;text-align:center;flex:1;display:flex;align-items:center;justify-content:center}
-.sk img{width:100%;height:80px;object-fit:contain}
-.sk .n{font-weight:700;font-size:13px}.sk .p{font-weight:800;margin-top:2px}
-.sk .x{position:absolute;top:8px;right:8px;background:#0a0a0f;border-radius:10px;padding:3px 8px;font-size:12px;font-weight:800;color:var(--g)}
-.sk button{margin-top:8px;padding:8px;font-size:13px}.sk.sel{box-shadow:0 0 0 2px var(--g)}
-.case{display:flex;align-items:center;gap:12px}.case .ic{font-size:44px}.case .i{flex:1}
-.vp{position:relative;overflow:hidden;background:#05050a;border-radius:14px;height:130px;margin:10px 0}
-.vp::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--g);transform:translateX(-50%);z-index:2;box-shadow:0 0 12px var(--g)}
-.strip{display:flex;height:100%;align-items:center}
-.it{flex:0 0 104px;margin-right:8px;height:104px;border-radius:12px;background:var(--c);border-bottom:4px solid var(--c2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:11px;padding:4px}.it b{font-size:28px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
-.box{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:18px;width:100%;max-width:440px;text-align:center;max-height:90vh;overflow:auto}
-input{width:100%;background:#0a0a0f;border:1px solid var(--b);color:#fff;border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
-.bar{height:8px;background:#22222b;border-radius:6px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--g)}
-.chips{display:flex;gap:8px;margin:10px 0}.chip{flex:1;text-align:center;padding:10px 0;border-radius:10px;background:#1d1d25;font-weight:700}.chip.on{background:var(--g);color:#04130b}
-.av{width:90px;height:90px;border-radius:50%;border:3px solid var(--g);margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:40px;background:#0e0e14;box-shadow:0 0 24px #1fff8f55}
-h3{margin:4px 0 12px}
-</style></head><body>
-<div id="view"></div>
-<nav>
-<div data-t="home"><i>🏠</i>Главная</div><div data-t="games"><i>🎮</i>Игры</div>
-<div data-t="inv"><i>🎒</i>Инвентарь</div><div data-t="prof"><i>👤</i>Профиль</div>
-</nav>
-<div id="modal" class="modal hide"><div class="box" id="box"></div></div>
-<script>
-let tg=null;function initTg(){try{tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand()}}catch(e){}}
-initTg();addEventListener("load",initTg);
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SKINOL - Забери свой дроп</title>
+    <style>
+        :root {
+            --bg-dark: #0d1015;
+            --panel-bg: #1a1d24;
+            --accent: #00ff66;
+            --text-main: #ffffff;
+            --text-muted: #8b92a5;
+        }
 
-const RAR={consumer:{n:"Ширпотреб",c:"#b0c3d9",w:50,p:[5,15]},milspec:{n:"Армейское",c:"#4b69ff",w:30,p:[20,60]},
-restricted:{n:"Запрещённое",c:"#8847ff",w:13,p:[80,200]},classified:{n:"Засекреченное",c:"#d32ce6",w:5,p:[250,600]},
-covert:{n:"Тайное",c:"#eb4b4b",w:1.8,p:[800,2000]},gold:{n:"Редкое золото",c:"#ffd700",w:.2,p:[3000,8000]}};
-const SK={consumer:["P250 | Sand Dune","MP9 | Storm","Nova | Predator"],milspec:["MAC-10 | Neon Rider","Glock-18 | Water Elemental","SG 553 | Cyrex"],
-restricted:["AK-47 | Redline","M4A4 | Desolate Space","USP-S | Cortex"],classified:["AWP | Asiimov","M4A1-S | Hyper Beast","Desert Eagle | Blaze"],
-covert:["AK-47 | Fire Serpent","AWP | Dragon Lore","M4A4 | Howl"],gold:["★ Karambit | Fade","★ Butterfly | Doppler","★ Sport Gloves | Vice"]};
-const EL={consumer:0,milspec:.5,restricted:1.5,classified:2.5,covert:3,gold:4};
-const CASES={welcome:{n:"Велком-кейс",e:"🎁",p:0},basic:{n:"Базовый кейс",e:"📦",p:100},elite:{n:"Элитный кейс",e:"💎",p:400}};
-const $=id=>document.getElementById(id),rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a,fmt=n=>Math.round(n).toLocaleString("ru-RU");
-let S;try{S=JSON.parse(localStorage.getItem("skinol2"))}catch(e){}
-S=S||{cr:100,welcome:false,inv:[],out:[],opened:0,upg:0,xp:0,since:Date.now(),rush:Date.now()+72e5,trade:"",sel:null,mult:2};
-const save=()=>{try{localStorage.setItem("skinol2",JSON.stringify(S))}catch(e){}};
-let tab="home";
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
 
-const emo=r=>r==="gold"?"🔪":"🔫";
-function rarOf(p){return Object.keys(RAR).reverse().find(k=>p>=RAR[k].p[0])||"consumer"}
-function mk(r,price,cp){return{id:Date.now()+Math.random(),r,name:SK[r][rnd(0,SK[r].length-1)],price,mult:cp?price/cp:0}}
-function roll(cid){const ks=Object.keys(RAR),ws=ks.map(k=>RAR[k].w*(cid==="elite"?EL[k]:1));
-let x=Math.random()*ws.reduce((a,b)=>a+b,0),k=ks[0];for(let i=0;i<ks.length;i++){x-=ws[i];if(x<=0){k=ks[i];break}}
-return mk(k,rnd(RAR[k].p[0],RAR[k].p[1]),CASES[cid].p)}
-function tile(i,e){e=e||{};const c=RAR[i.r].c;
-return`<div class="sk${e.sel?" sel":""}" style="--c2:${c}" ${e.click?`onclick="${e.click}"`:""}>
-${i.mult?`<div class="x">⚡×${i.mult.toFixed(2)}</div>`:""}
-<div class="em">${i.img?`<img src="${i.img}">`:emo(i.r)}</div>
-<div class="n">${i.name}</div><div class="m">${RAR[i.r].n}</div><div class="p g">💎 ${fmt(i.price)}</div>${e.btn||""}</div>`}
-const lvl=()=>1+Math.floor(S.xp/100);
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
-function home(){
-const feed=[...S.inv.slice(-3).reverse(),...Array.from({length:5},()=>roll("basic"))];
-return`<div class="tick"><div class="tk" style="--c2:#ffd700"><span class="tag" style="font-size:10px">DEMO</span><b>Лента дропов</b></div>${feed.map(i=>`<div class="tk" style="--c2:${RAR[i.r].c}"><span class="g">💎 ${fmt(i.price)}</span><b>${i.name}</b><span class="m">${RAR[i.r].n}</span></div>`).join("")}</div>
-<main><div class="logo">SKINOL</div>
-<div class="card"><div class="m">Баланс</div><div class="big">💎 ${fmt(S.cr)}</div>
-<div class="row" style="margin-top:14px"><button onclick="deposit()">Пополнить</button><button class="s" onclick="go('inv')">Вывести</button></div></div>
-<div class="card" style="border-color:var(--g)"><div style="display:flex;justify-content:space-between;align-items:center"><span class="tag">RUSH DROP</span><span id="rt" style="background:#0a0a0f;border-radius:12px;padding:8px 14px;font-weight:800"></span></div>
-<p class="m">Раз в 2 часа — бесплатные кристаллы. Заходи и забирай!</p><button id="rb" style="width:100%" onclick="rush()">Забрать +50 💎</button></div></main>`}
+        header {
+            background-color: var(--panel-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2e38;
+        }
 
-function games(){
-const inv=S.inv;
-const cs=Object.entries(CASES).map(([id,c])=>{const used=id==="welcome"&&S.welcome;
-return`<div class="card case"><div class="ic">${c.e}</div><div class="i"><b>${c.n}</b><div class="m">${c.p?fmt(c.p)+" 💎":"бесплатно, 1 раз"}</div></div>
-<button ${used||c.p>S.cr?"disabled":""} onclick="openCase('${id}')">${used?"Открыт":"Открыть"}</button></div>`}).join("");
-const sel=inv.find(i=>i.id===S.sel),ch=Math.min(95,95/S.mult);
-return`<main><h3>Кейсы</h3>${cs}<h3>⚡ Апгрейдер</h3><div class="card">
-${inv.length?`<div class="m">Выбери скин:</div><div class="grid" style="margin:10px 0;max-height:340px;overflow:auto">${[...inv].sort((a,b)=>b.price-a.price).slice(0,8).map(i=>tile(i,{click:`S.sel=${i.id};render()`,sel:i.id===S.sel})).join("")}</div>
-<div class="chips">${[1.5,2,3,5,10].map(m=>`<div class="chip ${m===S.mult?"on":""}" onclick="S.mult=${m};render()">×${m}</div>`).join("")}</div>
-${sel?`<p class="m">Шанс: <b class="g">${ch.toFixed(1)}%</b> → скин за ~💎 ${fmt(sel.price*S.mult)}</p>`:""}
-<button style="width:100%" ${sel?"":"disabled"} onclick="upgrade()">Апгрейд</button>`:`<div class="m">Сначала выбей скины в кейсах.</div>`}</div></main>`}
+        .logo {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
 
-function invView(){
-const l=[...S.inv].sort((a,b)=>b.price-a.price);
-return`<main><h3>Инвентарь (${l.length})</h3>
-${l.length?`<div class="grid">${l.map(i=>tile(i,{btn:`<div class="row"><button class="s" onclick="sell(${i.id})">Продать</button><button onclick="wd(${i.id})">Вывести</button></div>`})).join("")}</div>
-<button class="s" style="width:100%;margin-top:12px" onclick="sellAll()">Продать всё</button>`:`<div class="card m">Пока пусто. Открой кейс в разделе «Игры».</div>`}
-${S.out.length?`<h3 style="margin-top:20px">История вывода</h3>${S.out.slice().reverse().map(o=>`<div class="card" style="padding:12px"><b>${o.name}</b> <span class="g">💎 ${fmt(o.price)}</span><div class="m">${new Date(o.t).toLocaleString("ru-RU")} · демо-вывод ✔</div></div>`).join("")}`:""}</main>`}
+        .logo span {
+            color: var(--accent);
+        }
 
-function prof(){
-const days=Math.floor((Date.now()-S.since)/864e5)+1,pct=S.xp%100;
-const ach=[S.opened>=1,S.opened>=10,S.opened>=50,S.upg>=1,S.out.length>=1,S.cr>=1000,S.inv.length>=10].filter(Boolean).length;
-const tot=Math.max(1,S.opened+S.upg),pc=Math.round(S.opened/tot*100);
-const u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user,name=u?(u.first_name||"Игрок"):"Игрок";
-const top=[...S.inv,...S.out].sort((a,b)=>b.price-a.price).slice(0,4);
-return`<main><div class="card" style="text-align:center"><div class="m"><span class="g">●</span> Онлайн</div>
-<div class="av" style="margin-top:8px">${name[0].toUpperCase()}</div><div class="tag" style="margin-top:-14px;position:relative">LVL ${lvl()}</div>
-<h2 style="margin:10px 0 2px">${name}</h2><div class="m" style="display:flex;justify-content:space-between"><span>До ${lvl()+1} уровня</span><span>${pct}%</span></div><div class="bar"><i style="width:${pct}%"></i></div>
-<hr style="border:0;border-top:1px solid var(--b);margin:14px 0"><div class="m">С нами ${days} день</div>
-<div class="m" style="margin-top:6px">Открыто кейсов: ${S.opened} · Апгрейдов: ${S.upg}</div></div>
-<div class="card g" style="display:flex;justify-content:space-between"><span>🏆 Ачивки ${ach}/7</span><span>›</span></div>
-<div class="card"><div class="m">💎 БАЛАНС</div><div class="big" style="font-size:30px">${fmt(S.cr)}</div></div>
-<div class="card"><b>ЛЮБИМЫЕ РЕЖИМЫ</b><div class="bar" style="height:12px;margin:12px 0"><i style="width:${pc}%"></i></div><span class="g">● Кейсы ${pc}%</span> &nbsp;<span class="m">● Апгрейдер ${100-pc}%</span></div>
-<div class="card"><b>📦 ТОП МОИХ СКИНОВ</b><div class="grid" style="margin-top:12px">${top.length?top.map(i=>tile(i)).join(""):'<div class="m">Пока нет скинов</div>'}</div></div>
-<div class="card"><b>Trade-ссылка Steam</b><input id="tl" placeholder="https://steamcommunity.com/tradeoffer/new/?..." value="${S.trade}"><button class="s" style="width:100%" onclick="S.trade=$('tl').value;save();alert('Сохранено')">Сохранить</button></div></main>`}
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #242833;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
 
-function render(){$("view").innerHTML={home,games,inv:invView,prof}[tab]();
-document.querySelectorAll("nav div").forEach(d=>d.classList.toggle("on",d.dataset.t===tab));tick()}
-function go(t){tab=t;render();scrollTo(0,0)}
-document.querySelectorAll("nav div").forEach(d=>d.onclick=()=>go(d.dataset.t));
-function tick(){const t=$("rt");if(!t)return;const l=S.rush-Date.now(),b=$("rb");
-if(l<=0){t.textContent="Готово!";b.disabled=false}else{const s=Math.floor(l/1e3);
-t.textContent=[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,"0")).join(":");b.disabled=true}}
-setInterval(tick,1000);
+        .balance span {
+            color: var(--accent);
+        }
 
-function showM(h){$("box").innerHTML=h;$("modal").classList.remove("hide")}
-function closeM(){$("modal").classList.add("hide");render()}
-function rush(){if(S.rush>Date.now())return;S.cr+=50;S.rush=Date.now()+72e5;save();render()}
-function deposit(){showM(`<h3>Пополнить</h3><p class="m">Демо-режим: реальные платежи отключены.<br>Получи бесплатные кристаллы:</p>
-<div class="row"><button onclick="S.cr+=100;save();closeM()">+100 💎</button><button onclick="S.cr+=500;save();closeM()">+500 💎</button></div>
-<button class="s" style="width:100%;margin-top:10px" onclick="closeM()">Закрыть</button>`)}
-function sell(id){const i=S.inv.findIndex(x=>x.id===id);if(i<0)return;S.cr+=S.inv[i].price;S.inv.splice(i,1);save();render()}
-function sellAll(){S.cr+=S.inv.reduce((a,b)=>a+b.price,0);S.inv=[];save();render()}
-function wd(id){const it=S.inv.find(x=>x.id===id);if(!it)return;
-showM(`<h3>Вывод скина</h3><div class="grid" style="grid-template-columns:1fr;text-align:left">${tile(it)}</div>
-<input id="wl" placeholder="Trade-ссылка Steam" value="${S.trade}">
-<p class="m">Демо-режим: скин не отправляется в реальный Steam, операция только записывается в историю.</p>
-<div class="row"><button class="s" onclick="closeM()">Отмена</button><button onclick="doWd(${id})">Вывести</button></div>`)}
-function doWd(id){const l=$("wl").value.trim();if(!/^https?:\/\/.+/.test(l)){alert("Вставь trade-ссылку");return}
-S.trade=l;const i=S.inv.findIndex(x=>x.id===id);S.out.push({...S.inv[i],t:Date.now()});S.inv.splice(i,1);save();closeM()}
-function upgrade(){const it=S.inv.find(x=>x.id===S.sel);if(!it)return;const ch=Math.min(95,95/S.mult),ok=Math.random()*100<ch,m=S.mult;
-showM(`<h3>⚡ Апгрейд</h3><div class="big" style="font-size:54px">${ch.toFixed(1)}%</div><p class="m">Крутим...</p>`);
-try{tg&&tg.HapticFeedback.impactOccurred("heavy")}catch(e){}
-setTimeout(()=>{const i=S.inv.findIndex(x=>x.id===it.id);S.inv.splice(i,1);S.upg++;S.xp+=25;S.sel=null;let r;
-if(ok){const np=Math.round(it.price*m),n=mk(rarOf(np),np,0);n.mult=m;S.inv.push(n);r=`<div style="font-size:54px">✅</div><b class="g">Успех!</b><p>${n.name}<br>💎 ${fmt(np)}</p>`}
-else r=`<div style="font-size:54px">❌</div><b>Не повезло</b><p class="m">${it.name} сгорел</p>`;
-save();$("box").innerHTML=r+`<button style="width:100%;margin-top:10px" onclick="closeM()">Ок</button>`},2200)}
-function openCase(cid){const c=CASES[cid];if(cid==="welcome"&&S.welcome)return;if(S.cr<c.p)return;
-S.cr-=c.p;if(cid==="welcome")S.welcome=true;const win=roll(cid);S.inv.push(win);S.opened++;S.xp+=10;save();
-const W=36,items=Array.from({length:44},(_,i)=>i===W?win:roll(cid));
-showM(`<h3>${c.e} ${c.n}</h3><div class="vp"><div class="strip" id="st">${items.map(i=>`<div class="it" style="--c2:${RAR[i.r].c}"><b>${emo(i.r)}</b>${i.name}</div>`).join("")}</div></div><div id="res"></div>`);
-const st=$("st"),w=st.parentElement.clientWidth;st.style.transform="translateX(0)";st.getBoundingClientRect();
-st.style.transition="transform 5.5s cubic-bezier(.12,.6,.1,1)";st.style.transform=`translateX(${-(W*112+52-w/2+rnd(-35,35))}px)`;
-try{tg&&tg.HapticFeedback.impactOccurred("medium")}catch(e){}
-setTimeout(()=>{$("res").innerHTML=`<div style="font-size:60px">${emo(win.r)}</div><b style="font-size:19px;color:${RAR[win.r].c}">${win.name}</b>
-<div class="m">${RAR[win.r].n} · 💎 ${fmt(win.price)} · ⚡×${win.mult.toFixed(2)}</div>
-<div class="row" style="margin-top:14px"><button class="s" onclick="sell(${win.id});closeM()">Продать</button><button onclick="closeM()">Забрать</button></div>`},5700)}
-render();
-</script></body></html>
+        nav {
+            display: flex;
+            background-color: var(--panel-bg);
+            padding: 10px 20px;
+            gap: 10px;
+            border-bottom: 1px solid #2a2e38;
+            overflow-x: auto;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        nav a.active, nav a:hover {
+            background-color: #242833;
+            color: var(--text-main);
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .case-card {
+            background-color: var(--panel-bg);
+            border: 1px solid #2a2e38;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .case-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+        }
+
+        .case-image {
+            width: 80px;
+            height: 80px;
+            background: #242833;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .case-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .case-price {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .upgrader-container {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">SKIN<span>OL</span></div>
+        <div class="balance">
+            💎 <span id="balance-amount">100</span>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#" class="active" onclick="switchTab(event, 'cases')">Кейсы</a>
+        <a href="#" onclick="switchTab(event, 'upgrader')">Апгрейд</a>
+        <a href="#" onclick="switchTab(event, 'inventory')">Инвентарь</a>
+    </nav>
+
+    <main>
+        <!-- Кейсы -->
+        <div id="cases" class="section active">
+            <h2>Популярные дропы</h2>
+            <div class="cases-grid">
+                <div class="case-card" onclick="openCase(10)">
+                    <div class="case-image">📦</div>
+                    <div class="case-name">Mil-Spec Case</div>
+                    <div class="case-price">10 💎</div>
+                </div>
+                <div class="case-card" onclick="openCase(50)">
+                    <div class="case-image">📦</div>
+                    <div class="case-name">Restricted Case</div>
+                    <div class="case-price">50 💎</div>
+                </div>
+                <div class="case-card" onclick="openCase(100)">
+                    <div class="case-image">📦</div>
+                    <div class="case-name">Covert Case</div>
+                    <div class="case-price">100 💎</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Апгрейд -->
+        <div id="upgrader" class="section">
+            <div class="upgrader-container">
+                <h2 style="margin-bottom: 10px;">Апгрейд скинов</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">Повышай редкость своих предметов</p>
+                <div class="case-image" style="width: 120px; height: 120px; font-size: 50px;">🔫</div>
+                <button class="btn">Выбрать скин</button>
+            </div>
+        </div>
+
+        <!-- Инвентарь -->
+        <div id="inventory" class="section">
+            <h2>Твой инвентарь</h2>
+            <p style="color: var(--text-muted); margin-top: 15px;">Здесь пока пусто.</p>
+        </div>
+    </main>
+
+    <script>
+        let balance = 100;
+
+        function switchTab(event, tabId) {
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function openCase(price) {
+            if (balance >= price) {
+                balance -= price;
+                document.getElementById('balance-amount').innerText = balance;
+                alert('Кейс открывается...');
+            } else {
+                alert('Недостаточно кристаллов на балансе!');
+            }
+        }
+    </script>
+</body>
+</html>
