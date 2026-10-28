@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SKINOL - Забери бесплатный скин CS2</title>
+    <title>SKINOL - Кейсы и Апгрейды CS2</title>
     <style>
         :root {
             --bg-dark: #090b0e;
@@ -87,7 +87,7 @@
             margin-top: 2px;
         }
 
-        /* Основной контент */
+        /* Контент */
         main {
             flex: 1;
             padding: 10px 15px;
@@ -103,15 +103,14 @@
             display: block;
         }
 
-        /* Логотип */
         .logo-title {
             text-align: center;
-            font-size: 36px;
+            font-size: 34px;
             font-weight: 900;
             font-style: italic;
             color: var(--accent);
             text-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
-            margin: 10px 0 20px;
+            margin: 5px 0 15px;
             letter-spacing: 2px;
         }
 
@@ -120,7 +119,7 @@
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
             margin-bottom: 15px;
         }
@@ -132,14 +131,14 @@
         }
 
         .balance-amount {
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 900;
             color: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .balance-buttons {
@@ -149,7 +148,7 @@
 
         .btn {
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
             font-weight: 800;
             font-size: 14px;
@@ -169,80 +168,94 @@
             border: 1px solid var(--panel-border);
         }
 
-        /* Rush Drop блок */
-        .rush-box {
+        /* Рулетка кейсов */
+        .roulette-box {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 16px;
-            padding: 15px 20px;
-            margin-bottom: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
         }
 
-        .rush-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        .roulette-window {
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            position: relative;
+            background: #090b0e;
+            border-radius: 12px;
+            border: 2px solid var(--panel-border);
+            margin: 15px 0;
         }
 
-        .rush-badge {
+        .roulette-pointer {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
             background: var(--accent);
-            color: #000;
-            font-size: 11px;
-            font-weight: 900;
-            padding: 4px 10px;
-            border-radius: 6px;
+            z-index: 10;
+            box-shadow: 0 0 10px var(--accent);
         }
 
-        .timer {
-            background: #191f2b;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 1px;
+        .roulette-track {
+            display: flex;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            transition: transform 4s cubic-bezier(0.15, 0.75, 0.15, 1);
         }
 
-        .rush-desc {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 15px;
+        .roulette-item {
+            min-width: 110px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--panel-bg);
+            border-right: 2px solid var(--panel-border);
+            padding: 10px;
         }
 
-        /* Сетка кейсов */
-        .cases-grid {
+        /* Сетки кейсов и инвентаря */
+        .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 15px;
         }
 
-        .case-card {
+        .card-item {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 12px;
             padding: 15px;
             text-align: center;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .case-card:hover {
+        .card-item:hover {
             border-color: var(--accent);
         }
 
-        /* Инвентарь сетка */
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 15px;
-        }
+        .card-item.blue { border-color: var(--rarity-blue); }
+        .card-item.purple { border-color: var(--rarity-purple); }
+        .card-item.pink { border-color: var(--rarity-pink); }
+        .card-item.covert { border-color: var(--rarity-covert); }
 
-        .inv-card {
+        /* Апгрейдер */
+        .upgrader-box {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 16px;
+            padding: 20px;
             text-align: center;
         }
 
@@ -285,22 +298,22 @@
 </head>
 <body>
 
-    <!-- Верхняя панель (как на скрине) -->
+    <!-- Верхняя лента дропов -->
     <div class="top-banners">
         <div class="banner-card demo">
             <span class="demo-badge">DEMO</span>
             <div class="banner-title">Лента дропов</div>
-            <div class="banner-sub">просмотр</div>
+            <div class="banner-sub">в прямом эфире</div>
         </div>
         <div class="banner-card" style="border-color: var(--rarity-pink);">
             <div class="banner-title" style="color: var(--accent);">💎 119</div>
             <div class="banner-title">AK-47 | Redline</div>
             <div class="banner-sub" style="color: var(--rarity-pink);">Запрещённое</div>
         </div>
-        <div class="banner-card" style="border-color: var(--rarity-blue);">
-            <div class="banner-title" style="color: var(--accent);">💎 42</div>
-            <div class="banner-title">MAC-10 | Neon</div>
-            <div class="banner-sub" style="color: var(--rarity-blue);">Армейское</div>
+        <div class="banner-card" style="border-color: var(--rarity-covert);">
+            <div class="banner-title" style="color: var(--accent);">💎 350</div>
+            <div class="banner-title">AWP | Asiimov</div>
+            <div class="banner-sub" style="color: var(--rarity-covert);">Тайное</div>
         </div>
     </div>
 
@@ -312,55 +325,78 @@
             <div class="balance-box">
                 <div class="balance-label">Баланс</div>
                 <div class="balance-amount">
-                    💎 <span id="balance-num">200</span>
+                    💎 <span id="balance-num">250</span>
                 </div>
                 <div class="balance-buttons">
                     <button class="btn btn-primary" onclick="addBalance()">Пополнить</button>
-                    <button class="btn btn-secondary" onclick="alert('Функция вывода в разработке')">Вывести</button>
+                    <button class="btn btn-secondary" onclick="alert('Вывод доступен от 500 кристаллов!')">Вывести</button>
                 </div>
             </div>
 
-            <div class="rush-box">
-                <div class="rush-header">
-                    <span class="rush-badge">RUSH DROP</span>
-                    <div class="timer">01:51:51</div>
+            <div class="balance-box" style="text-align: left;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="background: var(--accent); color: #000; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 4px;">RUSH DROP</span>
+                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">01:42:15</span>
                 </div>
-                <div class="rush-desc">Раз в 2 часа — бесплатные кристаллы. Заходи и забирай!</div>
+                <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Бесплатные кристаллы каждые 2 часа.</div>
                 <button class="btn btn-primary" style="width: 100%;" onclick="claimDrop()">Забрать +50 💎</button>
             </div>
         </div>
 
-        <!-- Игры / Кейсы -->
-        <div id="games" class="section">
+        <!-- Кейсы -->
+        <div id="cases" class="section">
             <h2 style="margin-bottom: 15px;">Открытие кейсов</h2>
-            <div class="cases-grid">
-                <div class="case-card" onclick="openCase(50)">
+
+            <!-- Окно рулетки -->
+            <div id="rouletteBox" class="roulette-box">
+                <h3 id="rouletteStatus" style="margin-bottom: 5px;">Крутим рулетку...</h3>
+                <div class="roulette-window">
+                    <div class="roulette-pointer"></div>
+                    <div class="roulette-track" id="rouletteTrack"></div>
+                </div>
+                <button class="btn btn-primary" id="rouletteBtn" style="display: none; max-width: 200px; margin: 0 auto;" onclick="closeRoulette()">Забрать в инвентарь</button>
+            </div>
+
+            <div class="grid-2" id="casesGrid">
+                <div class="card-item" onclick="startCase(50, 'Standard Case')">
                     <div style="font-size: 36px; margin-bottom: 8px;">📦</div>
                     <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Standard Case</div>
                     <div style="color: var(--accent); font-weight: 800;">50 💎</div>
                 </div>
-                <div class="case-card" onclick="openCase(100)">
+                <div class="card-item" onclick="startCase(120, 'Premium Case')">
                     <div style="font-size: 36px; margin-bottom: 8px;">🎁</div>
-                    <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Covert Case</div>
-                    <div style="color: var(--accent); font-weight: 800;">100 💎</div>
+                    <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Premium Case</div>
+                    <div style="color: var(--accent); font-weight: 800;">120 💎</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Апгрейд -->
+        <div id="upgrader" class="section">
+            <h2 style="margin-bottom: 15px;">Апгрейд скинов</h2>
+            <div class="upgrader-box">
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Умножь стоимость своего предмета с шансом 50%!</p>
+                <div style="font-size: 40px; margin-bottom: 10px;">⚡</div>
+                <div id="upgradeTarget" style="font-weight: 700; margin-bottom: 15px; color: var(--text-muted);">Выбери предмет в инвентаре для апгрейда</div>
+                <button class="btn btn-primary" id="upgradeBtn" disabled style="opacity: 0.5;" onclick="runUpgrade()">Рискнуть (Шанс 50%)</button>
             </div>
         </div>
 
         <!-- Инвентарь -->
         <div id="inventory" class="section">
-            <h2 style="margin-bottom: 15px;">Твой инвентарь (<span id="inv-count">0</span>)</h2>
-            <div class="inventory-grid" id="invGrid">
-                <p style="color: var(--text-muted); grid-column: span 2;">Инвентарь пока пуст.</p>
+            <h2 style="margin-bottom: 15px;">Твой инвентарь (<span id="invCount">0</span>)</h2>
+            <div class="grid-2" id="invGrid">
+                <p style="color: var(--text-muted); grid-column: span 2;">Инвентарь пуст. Открывай кейсы!</p>
             </div>
         </div>
 
         <!-- Профиль -->
         <div id="profile" class="section">
-            <h2 style="margin-bottom: 15px;">Профиль</h2>
+            <h2 style="margin-bottom: 15px;">Профиль игрока</h2>
             <div class="balance-box" style="text-align: left;">
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 5px;">Статус: <span style="color: var(--accent);">Активен</span></p>
-                <p style="color: var(--text-muted); font-size: 13px;">Telegram Mini App v1.0</p>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">ID игрока: <span style="color: var(--text-main);">#774892</span></p>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">Статус: <span style="color: var(--accent);">VIP / Верифицирован</span></p>
+                <p style="color: var(--text-muted); font-size: 13px;">Всего предметов: <span id="profileInvCount" style="color: var(--text-main);">0</span></p>
             </div>
         </div>
     </main>
@@ -371,9 +407,13 @@
             <span class="nav-icon">🏠</span>
             <span>Главная</span>
         </button>
-        <button class="nav-item" onclick="switchTab(event, 'games')">
-            <span class="nav-icon">🎮</span>
-            <span>Игры</span>
+        <button class="nav-item" onclick="switchTab(event, 'cases')">
+            <span class="nav-icon">📦</span>
+            <span>Кейсы</span>
+        </button>
+        <button class="nav-item" onclick="switchTab(event, 'upgrader')">
+            <span class="nav-icon">⚡</span>
+            <span>Апгрейд</span>
         </button>
         <button class="nav-item" onclick="switchTab(event, 'inventory')">
             <span class="nav-icon">🎒</span>
@@ -386,15 +426,24 @@
     </nav>
 
     <script>
-        let balance = 200;
-        let inventory = [];
+        // Загрузка данных из LocalStorage
+        let balance = parseInt(localStorage.getItem('skinol_balance')) || 250;
+        let inventory = JSON.parse(localStorage.getItem('skinol_inv')) || [];
+        let selectedItemForUpgrade = null;
+        let selectedItemIndex = null;
 
         const allSkins = [
             { name: "MP9 | Dart", rarity: "blue", price: 15, icon: "🔫" },
+            { name: "P250 | Sand Dune", rarity: "blue", price: 8, icon: "🔫" },
             { name: "MAC-10 | Neon", rarity: "purple", price: 42, icon: "🔫" },
+            { name: "M4A4 | Evil Daimyo", rarity: "purple", price: 65, icon: "🔫" },
             { name: "AK-47 | Redline", rarity: "pink", price: 119, icon: "🔥" },
-            { name: "AWP | Asiimov", rarity: "covert", price: 350, icon: "🎯" }
+            { name: "USP-S | Kill Confirmed", rarity: "pink", price: 210, icon: "🎯" },
+            { name: "AWP | Asiimov", rarity: "covert", price: 350, icon: "🎯" },
+            { name: "Karambit | Fade", rarity: "covert", price: 1200, icon: "🔪" }
         ];
+
+        updateUI();
 
         function switchTab(event, tabId) {
             document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.remove('active'));
@@ -404,52 +453,152 @@
             document.getElementById(tabId).classList.add('active');
         }
 
+        function saveData() {
+            localStorage.setItem('skinol_balance', balance);
+            localStorage.setItem('skinol_inv', JSON.stringify(inventory));
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('balance-num').innerText = balance;
+            document.getElementById('invCount').innerText = inventory.length;
+            document.getElementById('profileInvCount').innerText = inventory.length;
+            renderInventory();
+        }
+
         function addBalance() {
             balance += 100;
-            document.getElementById('balance-num').innerText = balance;
+            saveData();
+            alert('Баланс успешно пополнен на 100 💎!');
         }
 
         function claimDrop() {
             balance += 50;
-            document.getElementById('balance-num').innerText = balance;
-            alert('Успешно! +50 кристаллов зачислено.');
+            saveData();
+            alert('Бонус получен! +50 кристаллов зачислено на баланс.');
         }
 
-        function openCase(price) {
+        // Логика рулетки кейсов
+        let wonSkin = null;
+
+        function startCase(price, caseName) {
             if (balance < price) {
-                alert('Недостаточно кристаллов!');
+                alert('Недостаточно кристаллов на балансе!');
                 return;
             }
+
             balance -= price;
-            document.getElementById('balance-num').innerText = balance;
+            saveData();
 
-            // Рандомный дроп скинчика
-            let wonSkin = allSkins[Math.floor(Math.random() * allSkins.length)];
-            inventory.push(wonSkin);
-            updateInventory();
+            document.getElementById('casesGrid').style.display = 'none';
+            const rBox = document.getElementById('rouletteBox');
+            rBox.style.display = 'block';
+            document.getElementById('rouletteBtn').style.display = 'none';
+            document.getElementById('rouletteStatus').innerText = 'Крутим кейс...';
 
-            alert(`Поздравляем! Вы выиграли: ${wonSkin.name} (${wonSkin.price} 💎). Предмет добавлен в инвентарь!`);
+            const track = document.getElementById('rouletteTrack');
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0px)';
+            track.innerHTML = '';
+
+            let winningIndex = 42;
+            let generated = [];
+
+            for (let i = 0; i < 50; i++) {
+                let skin = allSkins[Math.floor(Math.random() * allSkins.length)];
+                if (i === winningIndex) {
+                    wonSkin = skin;
+                }
+                generated.push(skin);
+                track.innerHTML += `
+                    <div class="roulette-item ${skin.rarity}">
+                        <div style="font-size: 28px;">${skin.icon}</div>
+                        <div style="font-size: 10px; font-weight: 700; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 90%;">${skin.name}</div>
+                    </div>
+                `;
+            }
+
+            setTimeout(() => {
+                track.style.transition = 'transform 4s cubic-bezier(0.15, 0.75, 0.15, 1)';
+                let offset = (winningIndex * 112) - 170;
+                track.style.transform = `translateX(-${offset}px)`;
+            }, 50);
+
+            setTimeout(() => {
+                document.getElementById('rouletteStatus').innerText = `Вы выиграли: ${wonSkin.name} (${wonSkin.price} 💎)!`;
+                document.getElementById('rouletteBtn').style.display = 'block';
+                inventory.push(wonSkin);
+                saveData();
+            }, 4100);
         }
 
-        function updateInventory() {
-            const grid = document.getElementById('invGrid');
-            document.getElementById('inv-count').innerText = inventory.length;
+        function closeRoulette() {
+            document.getElementById('rouletteBox').style.display = 'none';
+            document.getElementById('casesGrid').style.display = 'grid';
+        }
 
+        // Рендер инвентаря
+        function renderInventory() {
+            const grid = document.getElementById('invGrid');
             if (inventory.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: span 2;">Инвентарь пока пуст.</p>';
+                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: span 2;">Инвентарь пуст. Открывай кейсы!</p>';
                 return;
             }
 
             grid.innerHTML = '';
-            inventory.forEach(item => {
+            inventory.forEach((item, index) => {
                 grid.innerHTML += `
-                    <div class="inv-card">
+                    <div class="card-item ${item.rarity}" onclick="selectForUpgrade(${index})" style="cursor: pointer; position: relative;">
                         <div style="font-size: 30px; margin-bottom: 5px;">${item.icon}</div>
                         <div style="font-size: 11px; font-weight: 700; margin-bottom: 4px;">${item.name}</div>
                         <div style="color: var(--accent); font-size: 11px;">${item.price} 💎</div>
                     </div>
                 `;
             });
+        }
+
+        // Выбор предмета для апгрейда
+        function selectForUpgrade(index) {
+            selectedItemIndex = index;
+            selectedItemForUpgrade = inventory[index];
+            document.getElementById('upgradeTarget').innerHTML = `Выбран: <span style="color: var(--accent);">${selectedItemForUpgrade.name}</span> (${selectedItemForUpgrade.price} 💎)`;
+            let btn = document.getElementById('upgradeBtn');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            
+            // Переключаем вкладку на апгрейдер
+            document.querySelectorAll('.bottom-nav .nav-item').forEach((el, idx) => {
+                if (idx === 2) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('upgrader').classList.add('active');
+        }
+
+        function runUpgrade() {
+            if (!selectedItemForUpgrade) return;
+
+            let success = Math.random() >= 0.5; // 50% шанс
+            if (success) {
+                // Находим скин дороже
+                let betterSkins = allSkins.filter(s => s.price > selectedItemForUpgrade.price);
+                let reward = betterSkins.length > 0 ? betterSkins[Math.floor(Math.random() * betterSkins.length)] : selectedItemForUpgrade;
+                
+                inventory.splice(selectedItemIndex, 1, reward);
+                alert(`Успех! Апгрейд удался! Вы получили: ${reward.name} (${reward.price} 💎)`);
+            } else {
+                inventory.splice(selectedItemIndex, 1);
+                alert('Неудача! Предмет сгорел при попытке апгрейда.');
+            }
+
+            selectedItemForUpgrade = null;
+            selectedItemIndex = null;
+            document.getElementById('upgradeTarget').innerText = 'Выбери предмет в инвентаре для апгрейда';
+            let btn = document.getElementById('upgradeBtn');
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            saveData();
         }
     </script>
 </body>
