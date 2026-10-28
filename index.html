@@ -34,7 +34,6 @@
             overflow: hidden;
         }
 
-        /* Верхняя лента дропов */
         .top-banners {
             display: flex;
             gap: 10px;
@@ -87,7 +86,6 @@
             margin-top: 2px;
         }
 
-        /* Контент */
         main {
             flex: 1;
             padding: 10px 15px;
@@ -114,7 +112,6 @@
             letter-spacing: 2px;
         }
 
-        /* Баланс */
         .balance-box {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -168,7 +165,7 @@
             border: 1px solid var(--panel-border);
         }
 
-        /* Рулетка кейсов */
+        /* Рулетка */
         .roulette-box {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -181,10 +178,10 @@
 
         .roulette-window {
             width: 100%;
-            height: 120px;
+            height: 130px;
             overflow: hidden;
             position: relative;
-            background: #090b0e;
+            background: #05070a;
             border-radius: 12px;
             border: 2px solid var(--panel-border);
             margin: 15px 0;
@@ -198,8 +195,8 @@
             width: 4px;
             height: 100%;
             background: var(--accent);
-            z-index: 10;
-            box-shadow: 0 0 10px var(--accent);
+            z-index: 20;
+            box-shadow: 0 0 12px var(--accent);
         }
 
         .roulette-track {
@@ -208,11 +205,12 @@
             left: 0;
             top: 0;
             height: 100%;
-            transition: transform 4s cubic-bezier(0.15, 0.75, 0.15, 1);
+            will-change: transform;
         }
 
         .roulette-item {
-            min-width: 110px;
+            min-width: 120px;
+            width: 120px;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -221,9 +219,14 @@
             background: var(--panel-bg);
             border-right: 2px solid var(--panel-border);
             padding: 10px;
+            flex-shrink: 0;
         }
 
-        /* Сетки кейсов и инвентаря */
+        .roulette-item.blue { border-bottom: 4px solid var(--rarity-blue); }
+        .roulette-item.purple { border-bottom: 4px solid var(--rarity-purple); }
+        .roulette-item.pink { border-bottom: 4px solid var(--rarity-pink); }
+        .roulette-item.covert { border-bottom: 4px solid var(--rarity-covert); }
+
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -250,7 +253,6 @@
         .card-item.pink { border-color: var(--rarity-pink); }
         .card-item.covert { border-color: var(--rarity-covert); }
 
-        /* Апгрейдер */
         .upgrader-box {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -259,7 +261,6 @@
             text-align: center;
         }
 
-        /* Нижнее меню */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -298,7 +299,6 @@
 </head>
 <body>
 
-    <!-- Верхняя лента дропов -->
     <div class="top-banners">
         <div class="banner-card demo">
             <span class="demo-badge">DEMO</span>
@@ -318,7 +318,6 @@
     </div>
 
     <main>
-        <!-- Главная -->
         <div id="home" class="section active">
             <div class="logo-title">SKINOL</div>
 
@@ -343,11 +342,9 @@
             </div>
         </div>
 
-        <!-- Кейсы -->
         <div id="cases" class="section">
             <h2 style="margin-bottom: 15px;">Открытие кейсов</h2>
 
-            <!-- Окно рулетки -->
             <div id="rouletteBox" class="roulette-box">
                 <h3 id="rouletteStatus" style="margin-bottom: 5px;">Крутим рулетку...</h3>
                 <div class="roulette-window">
@@ -358,12 +355,12 @@
             </div>
 
             <div class="grid-2" id="casesGrid">
-                <div class="card-item" onclick="startCase(50, 'Standard Case')">
+                <div class="card-item" onclick="startCase(50)">
                     <div style="font-size: 36px; margin-bottom: 8px;">📦</div>
                     <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Standard Case</div>
                     <div style="color: var(--accent); font-weight: 800;">50 💎</div>
                 </div>
-                <div class="card-item" onclick="startCase(120, 'Premium Case')">
+                <div class="card-item" onclick="startCase(120)">
                     <div style="font-size: 36px; margin-bottom: 8px;">🎁</div>
                     <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Premium Case</div>
                     <div style="color: var(--accent); font-weight: 800;">120 💎</div>
@@ -371,18 +368,16 @@
             </div>
         </div>
 
-        <!-- Апгрейд -->
         <div id="upgrader" class="section">
             <h2 style="margin-bottom: 15px;">Апгрейд скинов</h2>
             <div class="upgrader-box">
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Умножь стоимость своего предмета с шансом 50%!</p>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;">Умножь стоимость предмета с шансом 50%!</p>
                 <div style="font-size: 40px; margin-bottom: 10px;">⚡</div>
                 <div id="upgradeTarget" style="font-weight: 700; margin-bottom: 15px; color: var(--text-muted);">Выбери предмет в инвентаре для апгрейда</div>
                 <button class="btn btn-primary" id="upgradeBtn" disabled style="opacity: 0.5;" onclick="runUpgrade()">Рискнуть (Шанс 50%)</button>
             </div>
         </div>
 
-        <!-- Инвентарь -->
         <div id="inventory" class="section">
             <h2 style="margin-bottom: 15px;">Твой инвентарь (<span id="invCount">0</span>)</h2>
             <div class="grid-2" id="invGrid">
@@ -390,7 +385,6 @@
             </div>
         </div>
 
-        <!-- Профиль -->
         <div id="profile" class="section">
             <h2 style="margin-bottom: 15px;">Профиль игрока</h2>
             <div class="balance-box" style="text-align: left;">
@@ -401,7 +395,6 @@
         </div>
     </main>
 
-    <!-- Нижнее меню -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab(event, 'home')">
             <span class="nav-icon">🏠</span>
@@ -426,11 +419,11 @@
     </nav>
 
     <script>
-        // Загрузка данных из LocalStorage
         let balance = parseInt(localStorage.getItem('skinol_balance')) || 250;
         let inventory = JSON.parse(localStorage.getItem('skinol_inv')) || [];
         let selectedItemForUpgrade = null;
         let selectedItemIndex = null;
+        let wonSkin = null;
 
         const allSkins = [
             { name: "MP9 | Dart", rarity: "blue", price: 15, icon: "🔫" },
@@ -478,10 +471,7 @@
             alert('Бонус получен! +50 кристаллов зачислено на баланс.');
         }
 
-        // Логика рулетки кейсов
-        let wonSkin = null;
-
-        function startCase(price, caseName) {
+        function startCase(price) {
             if (balance < price) {
                 alert('Недостаточно кристаллов на балансе!');
                 return;
@@ -501,10 +491,10 @@
             track.style.transform = 'translateX(0px)';
             track.innerHTML = '';
 
-            let winningIndex = 42;
+            let winningIndex = 35; 
             let generated = [];
 
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 45; i++) {
                 let skin = allSkins[Math.floor(Math.random() * allSkins.length)];
                 if (i === winningIndex) {
                     wonSkin = skin;
@@ -513,14 +503,17 @@
                 track.innerHTML += `
                     <div class="roulette-item ${skin.rarity}">
                         <div style="font-size: 28px;">${skin.icon}</div>
-                        <div style="font-size: 10px; font-weight: 700; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 90%;">${skin.name}</div>
+                        <div style="font-size: 10px; font-weight: 700; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center;">${skin.name}</div>
                     </div>
                 `;
             }
 
+            // Плавный запуск анимации прокрутки с точным центрированием на выигрышный элемент
             setTimeout(() => {
-                track.style.transition = 'transform 4s cubic-bezier(0.15, 0.75, 0.15, 1)';
-                let offset = (winningIndex * 112) - 170;
+                track.style.transition = 'transform 4s cubic-bezier(0.15, 0.85, 0.15, 1)';
+                let itemWidth = 120; // Точная ширина элемента с учетом min-width/width
+                let windowWidth = document.querySelector('.roulette-window').offsetWidth;
+                let offset = (winningIndex * itemWidth) - (windowWidth / 2) + (itemWidth / 2);
                 track.style.transform = `translateX(-${offset}px)`;
             }, 50);
 
@@ -537,7 +530,6 @@
             document.getElementById('casesGrid').style.display = 'grid';
         }
 
-        // Рендер инвентаря
         function renderInventory() {
             const grid = document.getElementById('invGrid');
             if (inventory.length === 0) {
@@ -548,7 +540,7 @@
             grid.innerHTML = '';
             inventory.forEach((item, index) => {
                 grid.innerHTML += `
-                    <div class="card-item ${item.rarity}" onclick="selectForUpgrade(${index})" style="cursor: pointer; position: relative;">
+                    <div class="card-item ${item.rarity}" onclick="selectForUpgrade(${index})" style="cursor: pointer;">
                         <div style="font-size: 30px; margin-bottom: 5px;">${item.icon}</div>
                         <div style="font-size: 11px; font-weight: 700; margin-bottom: 4px;">${item.name}</div>
                         <div style="color: var(--accent); font-size: 11px;">${item.price} 💎</div>
@@ -557,7 +549,6 @@
             });
         }
 
-        // Выбор предмета для апгрейда
         function selectForUpgrade(index) {
             selectedItemIndex = index;
             selectedItemForUpgrade = inventory[index];
@@ -566,7 +557,6 @@
             btn.disabled = false;
             btn.style.opacity = '1';
             
-            // Переключаем вкладку на апгрейдер
             document.querySelectorAll('.bottom-nav .nav-item').forEach((el, idx) => {
                 if (idx === 2) el.classList.add('active');
                 else el.classList.remove('active');
@@ -578,9 +568,8 @@
         function runUpgrade() {
             if (!selectedItemForUpgrade) return;
 
-            let success = Math.random() >= 0.5; // 50% шанс
+            let success = Math.random() >= 0.5;
             if (success) {
-                // Находим скин дороже
                 let betterSkins = allSkins.filter(s => s.price > selectedItemForUpgrade.price);
                 let reward = betterSkins.length > 0 ? betterSkins[Math.floor(Math.random() * betterSkins.length)] : selectedItemForUpgrade;
                 
