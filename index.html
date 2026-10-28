@@ -178,7 +178,7 @@
 
         .roulette-window {
             width: 100%;
-            height: 140px;
+            height: 130px;
             overflow: hidden;
             position: relative;
             background: #05070a;
@@ -218,15 +218,8 @@
             justify-content: center;
             background: var(--panel-bg);
             border-right: 2px solid var(--panel-border);
-            padding: 8px;
+            padding: 10px;
             flex-shrink: 0;
-        }
-
-        .roulette-item img {
-            width: 75px;
-            height: 55px;
-            object-fit: contain;
-            margin-bottom: 6px;
         }
 
         .roulette-item.blue { border-bottom: 4px solid var(--rarity-blue); }
@@ -255,19 +248,11 @@
             border-color: var(--accent);
         }
 
-        .card-item img {
-            width: 80px;
-            height: 60px;
-            object-fit: contain;
-            margin-bottom: 8px;
-        }
-
         .card-item.blue { border-color: var(--rarity-blue); }
         .card-item.purple { border-color: var(--rarity-purple); }
         .card-item.pink { border-color: var(--rarity-pink); }
         .card-item.covert { border-color: var(--rarity-covert); }
 
-        /* Апгрейдер с анимацией */
         .upgrader-box {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -282,37 +267,20 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .upgrade-slot {
-            width: 110px;
-            height: 110px;
-            background: #090b0e;
+            width: 100px;
+            height: 90px;
+            background: #05070a;
             border: 2px dashed var(--panel-border);
             border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-        }
-
-        .upgrade-slot img {
-            width: 70px;
-            height: 50px;
-            object-fit: contain;
-        }
-
-        .upgrade-radar {
-            font-size: 28px;
-            animation: pulseRadar 1.5s infinite;
-        }
-
-        @keyframes pulseRadar {
-            0% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; text-shadow: 0 0 15px var(--accent); }
-            100% { transform: scale(1); opacity: 0.6; }
+            padding: 5px;
         }
 
         .laser-beam {
@@ -321,7 +289,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 102, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 102, 0.25), transparent);
             pointer-events: none;
         }
 
@@ -429,12 +397,12 @@
 
             <div class="grid-2" id="casesGrid">
                 <div class="card-item" onclick="startCase(50)">
-                    <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09u_mI-0m_7zO6-cvj5Pv8J0j7-U8dih2QWw-xFuMWnyLYPAJwVrZ1rZ-Fa_yLju15W0vcvOzHY17Sg8pCuL2Qj2hgQ/360fx360f" alt="Standard Case">
+                    <div style="font-size: 38px; margin-bottom: 8px;">📦</div>
                     <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Standard Case</div>
                     <div style="color: var(--accent); font-weight: 800;">50 💎</div>
                 </div>
                 <div class="card-item" onclick="startCase(120)">
-                    <img src="https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovbSsLQJf2PLacDBA5ciJn76Ekvn5Ib7uk1RX6cBOhuDG_Zi73wDjrhBrZW6mco-dd1VoMwqG_1C3xby715K_6p2YyHU37nQr4n2LnxG2hE8bZ-F2nK_NTA/360fx360f" alt="Premium Case">
+                    <div style="font-size: 38px; margin-bottom: 8px;">🎁</div>
                     <div style="font-weight: 700; font-size: 13px; margin-bottom: 5px;">Premium Case</div>
                     <div style="color: var(--accent); font-weight: 800;">120 💎</div>
                 </div>
@@ -449,13 +417,13 @@
                 
                 <div class="upgrade-arena">
                     <div class="upgrade-slot" id="slotSource">
-                        <span style="font-size: 11px; color: var(--text-muted);">Исходный</span>
-                        <span style="font-size: 24px;">📥</span>
+                        <span style="font-size: 9px; color: var(--text-muted);">Исходный</span>
+                        <span style="font-size: 20px;">📥</span>
                     </div>
-                    <div class="upgrade-radar">⚡</div>
+                    <div style="font-size: 24px; color: var(--accent); animation: pulse 1s infinite;">⚡</div>
                     <div class="upgrade-slot" id="slotTarget">
-                        <span style="font-size: 11px; color: var(--text-muted);">Награда</span>
-                        <span style="font-size: 24px;">🎁</span>
+                        <span style="font-size: 9px; color: var(--text-muted);">Награда</span>
+                        <span style="font-size: 20px;">🎁</span>
                     </div>
                 </div>
 
@@ -512,14 +480,14 @@
         let wonSkin = null;
 
         const allSkins = [
-            { name: "MP9 | Dart", rarity: "blue", price: 15, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09u_mI-0m_7zO6-cvj5Pv8J0j7-U8dih2QWw-xFuMWnyLYPAJwVrZ1rZ-Fa_yLju15W0vcvOzHY17Sg8pCuL2Qj2hgQ/360fx360f" },
-            { name: "P250 | Sand Dune", rarity: "blue", price: 8, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpopujwezhjxszJemkV08y5moSFkuXLPr7Vj25V18lznOzAot-jjgHm_BY-Nm_zJoSUIQNoaAzUqADrlbu618W6up2Yz3M17yFwsnyMm0G3hBpEa_sv26cW7R8b/360fx360f" },
-            { name: "MAC-10 | Neon", rarity: "purple", price: 42, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovbSsLQJf2PLacDBA5ciJn76Ekvn5Ib7uk1RX6cBOhuDG_Zi73wDjrhBrZW6mco-dd1VoMwqG_1C3xby715K_6p2YyHU37nQr4n2LnxG2hE8bZ-F2nK_NTA/360fx360f" },
-            { name: "M4A4 | Evil Daimyo", rarity: "purple", price: 65, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpOW-rlZrCjzzVDThLF5MWJloj0m_7zO6-cvj5Pv8J2j7vAp4ml2gO2-xBuZG72LYPAJwU6ZFqCqQC-kOu5hcXq7pvImCY3vCI8pCuL_h6N53E/360fx360f" },
-            { name: "AK-47 | Redline", rarity: "pink", price: 119, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09u5io-OkvPlJ6juhG5D18p0juWPrNqj2lSy-kBrZTv2d9WdIwE3ZA3UrgW_xei918e9v5ydmyE1snAmsHeIn0exhR9FauVs0vSADA/360fx360f" },
-            { name: "USP-S | Kill Confirmed", rarity: "pink", price: 210, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoo6m1FBRp3_bGcjhQ09-jq5WYh8j3KqnUqWfYctStzeXI8oThxlLmqkBqMW_wIIOdegA3ZwrYrFjvxru9hpe7tc7Ln3U26CI8pCuL7r4v1gM/360fx360f" },
-            { name: "AWP | Asiimov", rarity: "covert", price: 350, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot621FABz7PLfYQJK9cyJgImMn-PlJ6juhG5D18p0juWPrNqj3wKy_kNpNTzzcNyWdwJqNQ3ZrQO8xru7g8C4uJ2ZmHRls3UmsHmImEHghhpFauVs1-5D3qA/360fx360f" },
-            { name: "Karambit | Fade", rarity: "covert", price: 1200, img: "https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpotLu8JallsODJYgJR-9u5hpS0k-7zO6-cvj5Dv8J0j7-VoNug3wWw_RE4Z2qnLtSSdwM7ZF-DrAK5k7y70ce7tMufnyRhu3Zz5XndmEG2hBBNbehu1vfOJw0t/360fx360f" }
+            { name: "MP9 | Dart", rarity: "blue", price: 15, icon: "🔫" },
+            { name: "P250 | Sand Dune", rarity: "blue", price: 8, icon: "🔫" },
+            { name: "MAC-10 | Neon", rarity: "purple", price: 42, icon: "🔥" },
+            { name: "M4A4 | Evil Daimyo", rarity: "purple", price: 65, icon: "🔥" },
+            { name: "AK-47 | Redline", rarity: "pink", price: 119, icon: "🎯" },
+            { name: "USP-S | Kill Confirmed", rarity: "pink", price: 210, icon: "🎯" },
+            { name: "AWP | Asiimov", rarity: "covert", price: 350, icon: "⚡" },
+            { name: "Karambit | Fade", rarity: "covert", price: 1200, icon: "🔪" }
         ];
 
         updateUI();
@@ -588,8 +556,8 @@
                 generated.push(skin);
                 track.innerHTML += `
                     <div class="roulette-item ${skin.rarity}">
-                        <img src="${skin.img}" alt="${skin.name}">
-                        <div style="font-size: 9px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center;">${skin.name}</div>
+                        <div style="font-size: 32px; margin-bottom: 5px;">${skin.icon}</div>
+                        <div style="font-size: 10px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center;">${skin.name}</div>
                     </div>
                 `;
             }
@@ -626,7 +594,7 @@
             inventory.forEach((item, index) => {
                 grid.innerHTML += `
                     <div class="card-item ${item.rarity}" onclick="selectForUpgrade(${index})" style="cursor: pointer;">
-                        <img src="${item.img}" alt="${item.name}">
+                        <div style="font-size: 32px; margin-bottom: 6px;">${item.icon}</div>
                         <div style="font-size: 11px; font-weight: 700; margin-bottom: 4px;">${item.name}</div>
                         <div style="color: var(--accent); font-size: 11px;">${item.price} 💎</div>
                     </div>
@@ -638,10 +606,9 @@
             selectedItemIndex = index;
             selectedItemForUpgrade = inventory[index];
             
-            // Подставляем картинку выбранного скина в слот апгрейдера
             document.getElementById('slotSource').innerHTML = `
                 <span style="font-size: 9px; color: var(--text-muted);">Исходный</span>
-                <img src="${selectedItemForUpgrade.img}" alt="">
+                <span style="font-size: 26px;">${selectedItemForUpgrade.icon}</span>
             `;
 
             let betterSkins = allSkins.filter(s => s.price > selectedItemForUpgrade.price);
@@ -649,7 +616,7 @@
 
             document.getElementById('slotTarget').innerHTML = `
                 <span style="font-size: 9px; color: var(--text-muted);">Цель (~${targetSkin.price} 💎)</span>
-                <img src="${targetSkin.img}" alt="">
+                <span style="font-size: 26px;">${targetSkin.icon}</span>
             `;
 
             document.getElementById('upgradeTarget').innerHTML = `Выбран: <span style="color: var(--accent);">${selectedItemForUpgrade.name}</span> ➔ шанс 50%`;
@@ -671,7 +638,6 @@
             let btn = document.getElementById('upgradeBtn');
             btn.disabled = true;
             
-            // Запуск лазерной анимации апгрейда
             let laser = document.getElementById('laserBeam');
             laser.classList.add('laser-active');
 
@@ -691,8 +657,8 @@
 
                 selectedItemForUpgrade = null;
                 selectedItemIndex = null;
-                document.getElementById('slotSource').innerHTML = `<span style="font-size: 11px; color: var(--text-muted);">Исходный</span><span style="font-size: 24px;">📥</span>`;
-                document.getElementById('slotTarget').innerHTML = `<span style="font-size: 11px; color: var(--text-muted);">Награда</span><span style="font-size: 24px;">🎁</span>`;
+                document.getElementById('slotSource').innerHTML = `<span style="font-size: 9px; color: var(--text-muted);">Исходный</span><span style="font-size: 20px;">📥</span>`;
+                document.getElementById('slotTarget').innerHTML = `<span style="font-size: 9px; color: var(--text-muted);">Награда</span><span style="font-size: 20px;">🎁</span>`;
                 document.getElementById('upgradeTarget').innerText = 'Выбери предмет в инвентаре для апгрейда';
                 btn.style.opacity = '0.5';
 
